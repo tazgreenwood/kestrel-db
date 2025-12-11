@@ -1,0 +1,674 @@
+/**
+ * Prebuilt Themes for Velocity DB
+ *
+ * Includes popular developer themes and custom variants
+ */
+
+import type { Theme } from './types'
+
+/**
+ * Base color palettes from Tailwind
+ */
+const tailwindColors = {
+  zinc: {
+    950: '#09090b',
+    900: '#18181b',
+    800: '#27272a',
+    700: '#3f3f46',
+    600: '#52525b',
+    500: '#71717a',
+    400: '#a1a1aa',
+    300: '#d4d4d8'
+  },
+  slate: {
+    950: '#020617',
+    900: '#0f172a',
+    800: '#1e293b',
+    700: '#334155',
+    600: '#475569',
+    500: '#64748b',
+    400: '#94a3b8',
+    300: '#cbd5e1'
+  },
+  gray: {
+    950: '#030712',
+    900: '#111827',
+    800: '#1f2937',
+    700: '#374151',
+    600: '#4b5563',
+    500: '#6b7280',
+    400: '#9ca3af',
+    300: '#d1d5db'
+  },
+  neutral: {
+    950: '#0a0a0a',
+    900: '#171717',
+    800: '#262626',
+    700: '#404040',
+    600: '#525252',
+    500: '#737373',
+    400: '#a3a3a3',
+    300: '#d4d4d4'
+  },
+  stone: {
+    950: '#0c0a09',
+    900: '#1c1917',
+    800: '#292524',
+    700: '#44403c',
+    600: '#57534e',
+    500: '#78716c',
+    400: '#a8a29e',
+    300: '#d6d3d1'
+  }
+}
+
+/**
+ * Generate a dark theme from a base color palette
+ */
+function createBaseTheme(
+  id: string,
+  name: string,
+  description: string,
+  colors: typeof tailwindColors.zinc
+): Theme {
+  return {
+    id,
+    name,
+    description,
+    isDark: true,
+    colors: {
+      background: {
+        primary: colors[950],
+        secondary: colors[900],
+        tertiary: colors[800],
+        elevated: colors[900]
+      },
+      text: {
+        primary: colors[300],
+        secondary: colors[400],
+        tertiary: colors[500],
+        inverse: colors[900]
+      },
+      border: {
+        default: colors[800],
+        subtle: colors[800] + '80',
+        focus: '#818cf8' // indigo-400
+      },
+      accent: {
+        primary: '#818cf8', // indigo-400
+        hover: '#6366f1', // indigo-500
+        active: '#818cf8',
+        subtle: '#818cf81a'
+      },
+      semantic: {
+        success: '#34d399', // emerald-400
+        successSubtle: '#34d39933',
+        error: '#f87171', // red-400
+        errorSubtle: '#f8717133',
+        warning: '#fbbf24', // amber-400
+        warningSubtle: '#fbbf2433',
+        info: '#60a5fa', // blue-400
+        infoSubtle: '#60a5fa33'
+      },
+      dataTypes: {
+        uuid: '#c084fc', // purple-400
+        hex: '#fb923c', // orange-400
+        date: '#60a5fa', // blue-400
+        json: '#818cf8', // indigo-400
+        boolean: {
+          true: '#34d399', // emerald-400
+          false: '#fbbf24' // amber-400
+        }
+      },
+      special: {
+        database: '#fbbf24', // amber-400
+        overlay: '#00000099', // black/60
+        scrollbar: colors[700],
+        scrollbarHover: colors[600]
+      }
+    }
+  }
+}
+
+/**
+ * Dark Theme (Default)
+ * Based on Tailwind Zinc with improved contrast
+ */
+export const darkTheme: Theme = createBaseTheme(
+  'dark',
+  'Dark',
+  'Classic dark theme with zinc palette',
+  tailwindColors.zinc
+)
+
+/**
+ * Dark Slate Theme
+ * Cool gray with blue undertones
+ */
+export const darkSlateTheme: Theme = createBaseTheme(
+  'dark-slate',
+  'Dark Slate',
+  'Cool gray with blue undertones',
+  tailwindColors.slate
+)
+
+/**
+ * Dark Gray Theme
+ * True neutral gray
+ */
+export const darkGrayTheme: Theme = createBaseTheme(
+  'dark-gray',
+  'Dark Gray',
+  'True neutral gray palette',
+  tailwindColors.gray
+)
+
+/**
+ * Dark Neutral Theme
+ * Warm gray with brown undertones
+ */
+export const darkNeutralTheme: Theme = createBaseTheme(
+  'dark-neutral',
+  'Dark Neutral',
+  'Warm gray with brown undertones',
+  tailwindColors.neutral
+)
+
+/**
+ * Dark Stone Theme
+ * Warmer gray with beige undertones
+ */
+export const darkStoneTheme: Theme = createBaseTheme(
+  'dark-stone',
+  'Dark Stone',
+  'Warm gray with beige undertones',
+  tailwindColors.stone
+)
+
+/**
+ * High Contrast Dark Theme
+ * Boosted contrast for accessibility
+ */
+export const highContrastTheme: Theme = {
+  id: 'high-contrast',
+  name: 'High Contrast',
+  description: 'Dark theme with enhanced contrast for better readability',
+  isDark: true,
+  colors: {
+    background: {
+      primary: '#000000',      // Pure black
+      secondary: '#0a0a0a',    // Near black
+      tertiary: '#1a1a1a',     // Lighter
+      elevated: '#0a0a0a'
+    },
+    text: {
+      primary: '#ffffff',      // Pure white
+      secondary: '#e5e5e5',    // Bright gray
+      tertiary: '#a3a3a3',     // Medium gray
+      inverse: '#000000'
+    },
+    border: {
+      default: '#404040',      // Bright border
+      subtle: '#2a2a2a',
+      focus: '#a5b4fc'         // Brighter indigo
+    },
+    accent: {
+      primary: '#a5b4fc',      // indigo-300 (brighter)
+      hover: '#818cf8',        // indigo-400
+      active: '#a5b4fc',
+      subtle: '#a5b4fc33'
+    },
+    semantic: {
+      success: '#4ade80',      // emerald-300
+      successSubtle: '#4ade8033',
+      error: '#fca5a5',        // red-300
+      errorSubtle: '#fca5a533',
+      warning: '#fcd34d',      // amber-300
+      warningSubtle: '#fcd34d33',
+      info: '#93c5fd',         // blue-300
+      infoSubtle: '#93c5fd33'
+    },
+    dataTypes: {
+      uuid: '#d8b4fe',         // purple-300
+      hex: '#fdba74',          // orange-300
+      date: '#93c5fd',         // blue-300
+      json: '#a5b4fc',         // indigo-300
+      boolean: {
+        true: '#4ade80',       // emerald-300
+        false: '#fcd34d'       // amber-300
+      }
+    },
+    special: {
+      database: '#fcd34d',     // amber-300
+      overlay: '#000000cc',    // Darker overlay
+      scrollbar: '#525252',
+      scrollbarHover: '#737373'
+    }
+  }
+}
+
+/**
+ * Catppuccin Mocha Theme
+ * Popular pastel theme for developers
+ * https://github.com/catppuccin/catppuccin
+ */
+export const catppuccinTheme: Theme = {
+  id: 'catppuccin',
+  name: 'Catppuccin Mocha',
+  description: 'Soothing pastel theme for the high-spirited',
+  author: 'Catppuccin',
+  isDark: true,
+  colors: {
+    background: {
+      primary: '#1e1e2e',      // Base
+      secondary: '#181825',    // Mantle
+      tertiary: '#313244',     // Surface0
+      elevated: '#181825'      // Mantle
+    },
+    text: {
+      primary: '#cdd6f4',      // Text
+      secondary: '#bac2de',    // Subtext1
+      tertiary: '#a6adc8',     // Subtext0
+      inverse: '#1e1e2e'       // Base
+    },
+    border: {
+      default: '#313244',      // Surface0
+      subtle: '#45475a',       // Surface1
+      focus: '#89b4fa'         // Blue
+    },
+    accent: {
+      primary: '#89b4fa',      // Blue
+      hover: '#74c7ec',        // Sapphire
+      active: '#89b4fa',       // Blue
+      subtle: '#89b4fa1a'
+    },
+    semantic: {
+      success: '#a6e3a1',      // Green
+      successSubtle: '#a6e3a133',
+      error: '#f38ba8',        // Red
+      errorSubtle: '#f38ba833',
+      warning: '#f9e2af',      // Yellow
+      warningSubtle: '#f9e2af33',
+      info: '#89b4fa',         // Blue
+      infoSubtle: '#89b4fa33'
+    },
+    dataTypes: {
+      uuid: '#cba6f7',         // Mauve
+      hex: '#fab387',          // Peach
+      date: '#89dceb',         // Sky
+      json: '#74c7ec',         // Sapphire
+      boolean: {
+        true: '#a6e3a1',       // Green
+        false: '#f9e2af'       // Yellow
+      }
+    },
+    special: {
+      database: '#f9e2af',     // Yellow
+      overlay: '#11111b99',    // Crust/60
+      scrollbar: '#45475a',    // Surface1
+      scrollbarHover: '#585b70' // Surface2
+    }
+  }
+}
+
+/**
+ * Nord Theme
+ * Arctic, north-bluish color palette
+ * https://www.nordtheme.com/
+ */
+export const nordTheme: Theme = {
+  id: 'nord',
+  name: 'Nord',
+  description: 'Arctic, north-bluish color palette',
+  author: 'Arctic Ice Studio',
+  isDark: true,
+  colors: {
+    background: {
+      primary: '#2e3440',      // Polar Night 0
+      secondary: '#3b4252',    // Polar Night 1
+      tertiary: '#434c5e',     // Polar Night 2
+      elevated: '#3b4252'      // Polar Night 1
+    },
+    text: {
+      primary: '#eceff4',      // Snow Storm 2
+      secondary: '#d8dee9',    // Snow Storm 1
+      tertiary: '#b8c0d0',     // Custom muted
+      inverse: '#2e3440'       // Polar Night 0
+    },
+    border: {
+      default: '#434c5e',      // Polar Night 2
+      subtle: '#4c566a',       // Polar Night 3
+      focus: '#88c0d0'         // Frost 3
+    },
+    accent: {
+      primary: '#88c0d0',      // Frost 3
+      hover: '#81a1c1',        // Frost 2
+      active: '#88c0d0',       // Frost 3
+      subtle: '#88c0d01a'
+    },
+    semantic: {
+      success: '#a3be8c',      // Aurora 4 (green)
+      successSubtle: '#a3be8c33',
+      error: '#bf616a',        // Aurora 0 (red)
+      errorSubtle: '#bf616a33',
+      warning: '#ebcb8b',      // Aurora 3 (yellow)
+      warningSubtle: '#ebcb8b33',
+      info: '#5e81ac',         // Frost 1
+      infoSubtle: '#5e81ac33'
+    },
+    dataTypes: {
+      uuid: '#b48ead',         // Aurora 5 (purple)
+      hex: '#d08770',          // Aurora 1 (orange)
+      date: '#5e81ac',         // Frost 1
+      json: '#8fbcbb',         // Frost 0
+      boolean: {
+        true: '#a3be8c',       // Aurora 4 (green)
+        false: '#ebcb8b'       // Aurora 3 (yellow)
+      }
+    },
+    special: {
+      database: '#ebcb8b',     // Aurora 3 (yellow)
+      overlay: '#2e344099',    // Polar Night 0/60
+      scrollbar: '#4c566a',    // Polar Night 3
+      scrollbarHover: '#616e88' // Lighter Polar Night
+    }
+  }
+}
+
+/**
+ * Dracula Theme
+ * Dark theme with vibrant colors
+ * https://draculatheme.com/
+ */
+export const draculaTheme: Theme = {
+  id: 'dracula',
+  name: 'Dracula',
+  description: 'Dark theme with vibrant, saturated colors',
+  author: 'Dracula Theme',
+  isDark: true,
+  colors: {
+    background: {
+      primary: '#282a36',      // Background
+      secondary: '#21222c',    // Current Line (darker)
+      tertiary: '#343746',     // Selection (lighter)
+      elevated: '#21222c'      // Current Line
+    },
+    text: {
+      primary: '#f8f8f2',      // Foreground
+      secondary: '#6272a4',    // Comment
+      tertiary: '#44475a',     // Current Line (muted)
+      inverse: '#282a36'       // Background
+    },
+    border: {
+      default: '#343746',      // Selection
+      subtle: '#44475a',       // Current Line
+      focus: '#bd93f9'         // Purple
+    },
+    accent: {
+      primary: '#bd93f9',      // Purple
+      hover: '#ff79c6',        // Pink
+      active: '#bd93f9',       // Purple
+      subtle: '#bd93f91a'
+    },
+    semantic: {
+      success: '#50fa7b',      // Green
+      successSubtle: '#50fa7b33',
+      error: '#ff5555',        // Red
+      errorSubtle: '#ff555533',
+      warning: '#f1fa8c',      // Yellow
+      warningSubtle: '#f1fa8c33',
+      info: '#8be9fd',         // Cyan
+      infoSubtle: '#8be9fd33'
+    },
+    dataTypes: {
+      uuid: '#bd93f9',         // Purple
+      hex: '#ffb86c',          // Orange
+      date: '#8be9fd',         // Cyan
+      json: '#ff79c6',         // Pink
+      boolean: {
+        true: '#50fa7b',       // Green
+        false: '#f1fa8c'       // Yellow
+      }
+    },
+    special: {
+      database: '#f1fa8c',     // Yellow
+      overlay: '#282a3699',    // Background/60
+      scrollbar: '#44475a',    // Current Line
+      scrollbarHover: '#6272a4' // Comment
+    }
+  }
+}
+
+/**
+ * One Dark Pro Theme
+ * Based on Atom's iconic One Dark theme
+ * https://github.com/Binaryify/OneDark-Pro
+ */
+export const oneDarkProTheme: Theme = {
+  id: 'one-dark-pro',
+  name: 'One Dark Pro',
+  description: 'Iconic theme from Atom editor',
+  author: 'Binaryify',
+  isDark: true,
+  colors: {
+    background: {
+      primary: '#282c34',      // Editor background
+      secondary: '#21252b',    // Sidebar background
+      tertiary: '#2c313c',     // Lighter element
+      elevated: '#21252b'      // Sidebar
+    },
+    text: {
+      primary: '#abb2bf',      // Default text
+      secondary: '#5c6370',    // Comments
+      tertiary: '#4b5263',     // Muted
+      inverse: '#282c34'       // Background
+    },
+    border: {
+      default: '#2c313c',      // Border
+      subtle: '#181a1f',       // Subtle border
+      focus: '#61afef'         // Blue
+    },
+    accent: {
+      primary: '#61afef',      // Blue
+      hover: '#528bff',        // Brighter blue
+      active: '#61afef',       // Blue
+      subtle: '#61afef1a'
+    },
+    semantic: {
+      success: '#98c379',      // Green
+      successSubtle: '#98c37933',
+      error: '#e06c75',        // Red
+      errorSubtle: '#e06c7533',
+      warning: '#e5c07b',      // Yellow
+      warningSubtle: '#e5c07b33',
+      info: '#61afef',         // Blue
+      infoSubtle: '#61afef33'
+    },
+    dataTypes: {
+      uuid: '#c678dd',         // Purple
+      hex: '#d19a66',          // Orange
+      date: '#56b6c2',         // Cyan
+      json: '#61afef',         // Blue
+      boolean: {
+        true: '#98c379',       // Green
+        false: '#e5c07b'       // Yellow
+      }
+    },
+    special: {
+      database: '#e5c07b',     // Yellow
+      overlay: '#282c3499',    // Background/60
+      scrollbar: '#4b5263',    // Muted
+      scrollbarHover: '#5c6370' // Comments
+    }
+  }
+}
+
+/**
+ * GitHub Dark Theme
+ * Official GitHub dark theme
+ * https://github.com/primer/github-vscode-theme
+ */
+export const githubDarkTheme: Theme = {
+  id: 'github-dark',
+  name: 'GitHub Dark',
+  description: "GitHub's official dark theme",
+  author: 'GitHub',
+  isDark: true,
+  colors: {
+    background: {
+      primary: '#0d1117',      // Canvas default
+      secondary: '#161b22',    // Canvas subtle
+      tertiary: '#21262d',     // Canvas inset
+      elevated: '#161b22'      // Canvas subtle
+    },
+    text: {
+      primary: '#e6edf3',      // Foreground default
+      secondary: '#7d8590',    // Foreground muted
+      tertiary: '#6e7681',     // Foreground subtle
+      inverse: '#0d1117'       // Canvas default
+    },
+    border: {
+      default: '#30363d',      // Border default
+      subtle: '#21262d',       // Border muted
+      focus: '#388bfd'         // Accent emphasis
+    },
+    accent: {
+      primary: '#58a6ff',      // Accent foreground
+      hover: '#388bfd',        // Accent emphasis
+      active: '#58a6ff',       // Accent foreground
+      subtle: '#58a6ff1a'
+    },
+    semantic: {
+      success: '#3fb950',      // Success foreground
+      successSubtle: '#3fb95033',
+      error: '#f85149',        // Danger foreground
+      errorSubtle: '#f8514933',
+      warning: '#d29922',      // Attention foreground
+      warningSubtle: '#d2992233',
+      info: '#58a6ff',         // Accent foreground
+      infoSubtle: '#58a6ff33'
+    },
+    dataTypes: {
+      uuid: '#d2a8ff',         // Done emphasis
+      hex: '#ffa657',          // Severe foreground
+      date: '#79c0ff',         // Accent muted
+      json: '#58a6ff',         // Accent foreground
+      boolean: {
+        true: '#3fb950',       // Success
+        false: '#d29922'       // Attention
+      }
+    },
+    special: {
+      database: '#d29922',     // Attention
+      overlay: '#0d111799',    // Overlay
+      scrollbar: '#6e768166',  // Subtle
+      scrollbarHover: '#7d859066' // Hover
+    }
+  }
+}
+
+/**
+ * Tokyo Night Theme
+ * Clean dark theme that celebrates the lights of Tokyo at night
+ * https://github.com/enkia/tokyo-night-vscode-theme
+ */
+export const tokyoNightTheme: Theme = {
+  id: 'tokyo-night',
+  name: 'Tokyo Night',
+  description: 'A clean dark theme celebrating Tokyo at night',
+  author: 'enkia',
+  isDark: true,
+  colors: {
+    background: {
+      primary: '#1a1b26',      // Background
+      secondary: '#16161e',    // Background dark
+      tertiary: '#24283b',     // Background highlight
+      elevated: '#16161e'      // Background dark
+    },
+    text: {
+      primary: '#c0caf5',      // Foreground
+      secondary: '#a9b1d6',    // Foreground dark
+      tertiary: '#565f89',     // Comment
+      inverse: '#1a1b26'       // Background
+    },
+    border: {
+      default: '#24283b',      // Background highlight
+      subtle: '#292e42',       // Border
+      focus: '#7aa2f7'         // Blue
+    },
+    accent: {
+      primary: '#7aa2f7',      // Blue
+      hover: '#2ac3de',        // Cyan
+      active: '#7aa2f7',       // Blue
+      subtle: '#7aa2f71a'
+    },
+    semantic: {
+      success: '#9ece6a',      // Green
+      successSubtle: '#9ece6a33',
+      error: '#f7768e',        // Red
+      errorSubtle: '#f7768e33',
+      warning: '#e0af68',      // Yellow
+      warningSubtle: '#e0af6833',
+      info: '#7dcfff',         // Cyan
+      infoSubtle: '#7dcfff33'
+    },
+    dataTypes: {
+      uuid: '#bb9af7',         // Purple
+      hex: '#ff9e64',          // Orange
+      date: '#7dcfff',         // Cyan
+      json: '#7aa2f7',         // Blue
+      boolean: {
+        true: '#9ece6a',       // Green
+        false: '#e0af68'       // Yellow
+      }
+    },
+    special: {
+      database: '#e0af68',     // Yellow
+      overlay: '#1a1b2699',    // Overlay
+      scrollbar: '#292e42',    // Border
+      scrollbarHover: '#3b4261' // Border highlight
+    }
+  }
+}
+
+/**
+ * All available themes
+ * Order: Core themes → Base variants → Popular presets
+ */
+export const themes: Record<string, Theme> = {
+  // Core themes
+  dark: darkTheme,
+  'high-contrast': highContrastTheme,
+
+  // Base color variants
+  'dark-slate': darkSlateTheme,
+  'dark-gray': darkGrayTheme,
+  'dark-neutral': darkNeutralTheme,
+  'dark-stone': darkStoneTheme,
+
+  // Popular presets (alphabetical)
+  dracula: draculaTheme,
+  'one-dark-pro': oneDarkProTheme,
+  'tokyo-night': tokyoNightTheme
+}
+
+/**
+ * Get theme by ID
+ */
+export function getTheme(id: string): Theme {
+  return themes[id] || darkTheme
+}
+
+/**
+ * Get all theme IDs
+ */
+export function getThemeIds(): string[] {
+  return Object.keys(themes)
+}
+
+/**
+ * Get all themes
+ */
+export function getAllThemes(): Theme[] {
+  return Object.values(themes)
+}

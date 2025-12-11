@@ -1,0 +1,234 @@
+@import 'tailwindcss';
+
+/* CSS Variables - set by ThemeProvider */
+:root {
+  /* Theme colors - injected dynamically */
+  /* Font settings */
+  --font-size-data: 13px;
+  --font-family-data: ui-monospace, monospace;
+  --ui-scale: 1;
+
+  /* Transitions */
+  --transition-duration: 150ms;
+}
+
+/* Custom scrollbar styling using CSS variables */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--scrollbar);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-hover);
+}
+
+/* Firefox scrollbar styling */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar) var(--bg-secondary);
+}
+
+/* Reduce motion for accessibility */
+.reduce-motion,
+.reduce-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* High contrast mode for accessibility */
+.high-contrast {
+  /* Increase border visibility */
+  --border-default: color-mix(in srgb, var(--text-primary) 40%, transparent);
+  --border-subtle: color-mix(in srgb, var(--text-primary) 25%, transparent);
+}
+
+.high-contrast * {
+  /* Stronger borders */
+  border-width: max(1px, calc(var(--border-width, 1px) * 1.5));
+}
+
+.high-contrast .text-primary {
+  /* Increase text brightness */
+  filter: brightness(1.15) contrast(1.1);
+}
+
+.high-contrast .text-secondary {
+  /* Make secondary text more visible */
+  opacity: 0.85;
+}
+
+.high-contrast button,
+.high-contrast a,
+.high-contrast [role='button'] {
+  /* Stronger focus indicators */
+  outline-offset: 2px;
+}
+
+.high-contrast button:focus-visible,
+.high-contrast a:focus-visible,
+.high-contrast [role='button']:focus-visible {
+  outline: 3px solid var(--accent-primary);
+}
+
+/* Interactive Elements - Cursor & Hover States */
+button,
+a,
+[role='button'],
+[onClick],
+.cursor-pointer {
+  cursor: pointer;
+}
+
+button:disabled,
+button[disabled],
+a:disabled,
+[role='button']:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Theme Utility Classes */
+/* Background Colors */
+.bg-primary {
+  background-color: var(--bg-primary);
+}
+.bg-secondary {
+  background-color: var(--bg-secondary);
+}
+.bg-tertiary {
+  background-color: var(--bg-tertiary);
+}
+.bg-elevated {
+  background-color: var(--bg-elevated);
+}
+
+/* Text Colors */
+.text-primary {
+  color: var(--text-primary);
+}
+.text-secondary {
+  color: var(--text-secondary);
+}
+.text-tertiary {
+  color: var(--text-tertiary);
+}
+.text-inverse {
+  color: var(--text-inverse);
+}
+
+/* Border Colors */
+.border-default {
+  border-color: var(--border-default);
+}
+.border-subtle {
+  border-color: var(--border-subtle);
+}
+.border-focus {
+  border-color: var(--border-focus);
+}
+
+/* Accent Colors */
+.text-accent {
+  color: var(--accent-primary);
+}
+.text-accent-hover {
+  color: var(--accent-hover);
+}
+.bg-accent {
+  background-color: var(--accent-primary);
+}
+.bg-accent-subtle {
+  background-color: var(--accent-subtle);
+}
+.border-accent {
+  border-color: var(--accent-primary);
+}
+
+/* Semantic Colors */
+.text-success {
+  color: var(--success);
+}
+.text-error {
+  color: var(--error);
+}
+.text-warning {
+  color: var(--warning);
+}
+.text-info {
+  color: var(--info);
+}
+
+.bg-success-subtle {
+  background-color: var(--success-subtle);
+}
+.bg-error-subtle {
+  background-color: var(--error-subtle);
+}
+.bg-warning-subtle {
+  background-color: var(--warning-subtle);
+}
+.bg-info-subtle {
+  background-color: var(--info-subtle);
+}
+
+.border-success {
+  border-color: var(--success);
+}
+.border-error {
+  border-color: var(--error);
+}
+.border-warning {
+  border-color: var(--warning);
+}
+
+/* Data Type Colors */
+.text-data-uuid {
+  color: var(--data-uuid);
+}
+.text-data-hex {
+  color: var(--data-hex);
+}
+.text-data-date {
+  color: var(--data-date);
+}
+.text-data-json {
+  color: var(--data-json);
+}
+.text-data-boolean-true {
+  color: var(--data-boolean-true);
+}
+.text-data-boolean-false {
+  color: var(--data-boolean-false);
+}
+
+/* Special */
+.text-database {
+  color: var(--special-database);
+}
+.bg-overlay {
+  background-color: var(--special-overlay);
+}
+
+/* Hover variants */
+.hover\:bg-tertiary:hover {
+  background-color: var(--bg-tertiary);
+}
+.hover\:text-primary:hover {
+  color: var(--text-primary);
+}
+.hover\:text-accent:hover {
+  color: var(--accent-hover);
+}
+.hover\:border-focus:hover {
+  border-color: var(--border-focus);
+}
