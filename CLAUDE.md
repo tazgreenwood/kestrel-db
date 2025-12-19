@@ -317,6 +317,78 @@ const result = await window.api.connection.connect(config)
 - **Interface for object shapes** - Use `interface` for objects, `type` for unions
 - **Named exports** - Avoid default exports except for main components
 
+### Code Quality & Linting
+
+**IMPORTANT**: All code must pass linting before being committed. Run `npm run lint` to check for issues.
+
+#### Required Standards
+
+1. **Explicit Function Return Types** - All functions must have explicit return types:
+
+   ```typescript
+   // React components
+   export function MyComponent(): React.JSX.Element { ... }
+   export function ModalComponent(): React.JSX.Element | null { ... }
+
+   // Event handlers
+   const handleClick = (): void => { ... }
+   const handleSubmit = async (e: React.FormEvent): Promise<void> => { ... }
+
+   // Inline event handlers
+   <button onClick={(): void => doSomething()}>Click</button>
+   <input onChange={(e): void => setValue(e.target.value)} />
+   ```
+
+2. **No Explicit `any` Types** - Use proper types or `unknown`:
+
+   ```typescript
+   // Bad
+   const data: any = fetchData()
+
+   // Good
+   const data: User[] = fetchData()
+   const data: unknown = fetchData() // if type is truly unknown
+   ```
+
+3. **Memo Components Need Display Names**:
+
+   ```typescript
+   const MyMemoComponent = memo(({ value }: Props): React.JSX.Element => {
+     return <div>{value}</div>
+   })
+
+   MyMemoComponent.displayName = 'MyMemoComponent'
+   ```
+
+4. **Escape Special Characters in JSX**:
+
+   ```typescript
+   // Bad - unescaped quotes/apostrophes
+   <p>You're viewing "data"</p>
+
+   // Good - use curly braces for strings with quotes
+   <p>{"You're viewing \"data\""}</p>
+   ```
+
+5. **Proper TypeScript Imports**:
+   ```typescript
+   // Import types separately
+   import { type Row } from '@tanstack/react-table'
+   import type { Theme } from '../types'
+   ```
+
+#### Pre-Commit Checklist
+
+Before committing code, ensure:
+
+- [ ] `npm run typecheck` passes with no errors
+- [ ] `npm run lint` passes with no errors
+- [ ] All functions have explicit return types
+- [ ] No `any` types are used
+- [ ] Prettier formatting is applied (run `npm run format`)
+- [ ] React hooks have proper dependency arrays
+- [ ] No unused variables or imports
+
 ### React Components
 
 ```typescript

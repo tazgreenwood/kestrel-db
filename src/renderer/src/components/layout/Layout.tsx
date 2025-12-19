@@ -1,10 +1,10 @@
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 
 interface LayoutProps {
   children: ReactNode
 }
 
-export function Layout({ children }: LayoutProps) {
+export function Layout({ children }: LayoutProps): React.JSX.Element {
   return (
     <div className="h-screen w-screen bg-transparent font-sans flex flex-col overflow-hidden rounded-lg border border-default/50">
       <div

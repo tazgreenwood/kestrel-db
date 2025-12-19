@@ -4,6 +4,7 @@
  * Shows a preview of settings that will be imported with validation warnings/errors
  */
 
+import React from 'react'
 import { X, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react'
 import type { ImportValidationResult } from '../../store/useSettingsStore'
 
@@ -19,13 +20,13 @@ export function ImportPreviewModal({
   validationResult,
   onClose,
   onConfirm
-}: ImportPreviewModalProps) {
+}: ImportPreviewModalProps): React.JSX.Element | null {
   if (!isOpen) return null
 
   const { isValid, settings, warnings, errors } = validationResult
 
   // Format setting value for display
-  const formatValue = (key: string, value: any): string => {
+  const formatValue = (key: string, value: unknown): string => {
     if (typeof value === 'boolean') return value ? 'Enabled' : 'Disabled'
     if (typeof value === 'number') {
       if (key === 'fontSize') return `${value}px`

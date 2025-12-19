@@ -3,7 +3,7 @@ import mysql from 'mysql2/promise'
 export interface DbCredentials {
   host: string
   user: string
-  password: string
+  password?: string
   port?: number
 }
 
@@ -100,7 +100,7 @@ export async function testConnection(windowId: number, creds: DbCredentials): Pr
     state.pool = mysql.createPool({
       host: creds.host,
       user: creds.user,
-      password: creds.password,
+      password: creds.password || '',
       port: creds.port || 3306,
       waitForConnections: true,
       connectionLimit: 10,
@@ -309,7 +309,7 @@ function isUuidColumn(columnName: string): boolean {
  * Serialize database values for JSON transmission
  * Handles: Buffers (UUIDs, hex), Dates (ISO strings), BigInt, etc.
  */
-function serializeValue(value: any, columnName: string): any {
+function serializeValue(value: unknown, columnName: string): unknown {
   // Handle null/undefined
   if (value === null || value === undefined) {
     return value
@@ -333,7 +333,7 @@ function serializeValue(value: any, columnName: string): any {
     }
     try {
       return value.toISOString()
-    } catch (error) {
+    } catch {
       // If toISOString() fails for any reason, return null
       return null
     }
@@ -358,7 +358,7 @@ export interface QueryOptions {
 }
 
 export interface QueryResult {
-  data: any[]
+  data: Record<string, unknown>[]
   totalCount: number
   hasMore: boolean
 }
@@ -421,9 +421,10 @@ async function queryWithTimeout<T>(
 
     const [rows] = await state.pool.query(queryOptions)
     return rows as T
-  } catch (error: any) {
+  } catch (error: unknown) {
     // MySQL timeout errors have a specific code
-    if (error.code === 'PROTOCOL_SEQUENCE_TIMEOUT' || error.sqlState === 'HY000') {
+    const mysqlError = error as { code?: string; sqlState?: string }
+    if (mysqlError.code === 'PROTOCOL_SEQUENCE_TIMEOUT' || mysqlError.sqlState === 'HY000') {
       throw new Error(`Query timeout: exceeded ${timeoutSeconds} seconds`)
     }
     throw error
@@ -524,11 +525,11 @@ export async function queryTable(
     query += ` LIMIT ${safeLimit} OFFSET ${safeOffset}`
 
     // Execute query with timeout
-    const rows = await queryWithTimeout<any[]>(windowId, query, timeout)
+    const rows = await queryWithTimeout<Record<string, unknown>[]>(windowId, query, timeout)
 
     // Serialize each row to handle Buffers, Dates, etc.
     const data = rows.map((row) => {
-      const serialized: any = {}
+      const serialized: Record<string, unknown> = {}
       for (const [key, value] of Object.entries(row)) {
         serialized[key] = serializeValue(value, key)
       }
@@ -548,7 +549,7 @@ export async function queryTable(
 }
 
 export interface QueryExecutionResult {
-  data: any[]
+  data: Record<string, unknown>[]
   fields: string[]
   rowCount: number
   executionTime: number
@@ -581,7 +582,7 @@ export async function executeQuery(
 
   try {
     // Execute the query with timeout
-    const rows = await queryWithTimeout<any[]>(windowId, query.trim(), timeout)
+    const rows = await queryWithTimeout<Record<string, unknown>[]>(windowId, query.trim(), timeout)
     const executionTime = (Date.now() - startTime) / 1000 // Convert to seconds
 
     // If no rows returned (e.g., INSERT, UPDATE, DELETE), return empty result
@@ -599,7 +600,7 @@ export async function executeQuery(
 
     // Serialize each row to handle Buffers, Dates, etc.
     const data = rows.map((row) => {
-      const serialized: any = {}
+      const serialized: Record<string, unknown> = {}
       for (const [key, value] of Object.entries(row)) {
         serialized[key] = serializeValue(value, key)
       }

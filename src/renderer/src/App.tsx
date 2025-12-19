@@ -68,7 +68,7 @@ function App(): React.JSX.Element {
     return undefined
   }, [hasCompletedOnboarding])
 
-  const handleOnboardingComplete = () => {
+  const handleOnboardingComplete = (): void => {
     setShowOnboarding(false)
     setOnboardingCompleted()
   }

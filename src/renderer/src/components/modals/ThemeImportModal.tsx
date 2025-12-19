@@ -4,8 +4,8 @@
  * Simple modal with textarea for pasting theme JSON
  */
 
+import React, { useState } from 'react'
 import { X, Upload, AlertCircle } from 'lucide-react'
-import { useState } from 'react'
 
 interface ThemeImportModalProps {
   isOpen: boolean
@@ -13,11 +13,15 @@ interface ThemeImportModalProps {
   onImport: (jsonString: string) => void
 }
 
-export function ThemeImportModal({ isOpen, onClose, onImport }: ThemeImportModalProps) {
+export function ThemeImportModal({
+  isOpen,
+  onClose,
+  onImport
+}: ThemeImportModalProps): React.JSX.Element | null {
   const [jsonInput, setJsonInput] = useState('')
   const [error, setError] = useState<string | null>(null)
 
-  const handleImport = () => {
+  const handleImport = (): void => {
     if (!jsonInput.trim()) {
       setError('Please paste theme JSON')
       return
@@ -29,12 +33,12 @@ export function ThemeImportModal({ isOpen, onClose, onImport }: ThemeImportModal
       onImport(jsonInput)
       setJsonInput('')
       setError(null)
-    } catch (e) {
+    } catch {
       setError('Invalid JSON format')
     }
   }
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setJsonInput('')
     setError(null)
     onClose()
@@ -68,17 +72,18 @@ export function ThemeImportModal({ isOpen, onClose, onImport }: ThemeImportModal
         {/* Content */}
         <div className="flex-1 p-6">
           <p className="text-sm text-secondary mb-4">
-            Paste the theme JSON below. You can get this by copying from a custom theme's "Copy
-            JSON" button.
+            {
+              'Paste the theme JSON below. You can get this by copying from a custom theme\'s "Copy JSON" button.'
+            }
           </p>
 
           <textarea
             value={jsonInput}
-            onChange={(e) => {
+            onChange={(e): void => {
               setJsonInput(e.target.value)
               setError(null)
             }}
-            placeholder='{"type": "velocity-theme", "version": "1.0.0", "theme": {...}}'
+            placeholder='{"type": "kestrel-theme", "version": "1.0.0", "theme": {...}}'
             className="w-full h-64 bg-primary border border-default rounded px-3 py-2 text-sm text-primary font-mono focus:outline-none focus:ring-2 focus:ring-accent resize-none"
           />
 

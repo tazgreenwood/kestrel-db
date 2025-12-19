@@ -17,7 +17,7 @@ export interface ExportedSettings {
 }
 
 export interface ExportedTheme {
-  type: 'velocity-theme'
+  type: 'kestrel-theme'
   version: string
   exportDate: string
   theme: Theme
@@ -213,8 +213,8 @@ export const useSettingsStore = create<SettingsStore>()(
             // Validate custom themes array
             if (Array.isArray(imported.customThemes)) {
               const validThemes = imported.customThemes.filter(
-                (theme: any) =>
-                  theme &&
+                (theme: unknown): theme is { id: string; name: string; colors: unknown } =>
+                  theme !== null &&
                   typeof theme === 'object' &&
                   'id' in theme &&
                   'name' in theme &&
@@ -372,10 +372,11 @@ export const useSettingsStore = create<SettingsStore>()(
         if (!theme) return null
 
         // Omit the id field so each import generates a new unique ID
-        const { id, ...themeWithoutId } = theme
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id: _id, ...themeWithoutId } = theme
 
         return {
-          type: 'velocity-theme',
+          type: 'kestrel-theme',
           version: '1.0.0',
           exportDate: new Date().toISOString(),
           theme: themeWithoutId as Theme
@@ -389,8 +390,8 @@ export const useSettingsStore = create<SettingsStore>()(
           const parsed = JSON.parse(jsonString)
 
           // Check if it's a theme file
-          if (parsed.type !== 'velocity-theme') {
-            errors.push('Invalid file type: not a Velocity theme file')
+          if (parsed.type !== 'kestrel-theme') {
+            errors.push('Invalid file type: not a Kestrel theme file')
             return { isValid: false, errors }
           }
 

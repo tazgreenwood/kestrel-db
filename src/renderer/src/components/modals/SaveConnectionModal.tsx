@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { X, Check, Eye, EyeOff } from 'lucide-react'
 import {
   useConnectionsStore,
@@ -24,7 +24,11 @@ const COLOR_OPTIONS: Array<{ value: ConnectionColor; bg: string; border: string;
   { value: 'gray', bg: 'bg-gray-500/20', border: 'border-gray-500', hex: '#6b7280' }
 ]
 
-export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveConnectionModalProps) {
+export function SaveConnectionModal({
+  isOpen,
+  onClose,
+  editConnection
+}: SaveConnectionModalProps): React.JSX.Element | null {
   const [loading, setLoading] = useState(false)
   const [testing, setTesting] = useState(false)
   const [tested, setTested] = useState(false)
@@ -66,7 +70,7 @@ export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveCon
     }
 
     if (editConnection) {
-      const loadConnection = async () => {
+      const loadConnection = async (): Promise<void> => {
         try {
           const fullConn = await getConnection(editConnection.id)
           setForm({
@@ -78,7 +82,7 @@ export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveCon
             color: fullConn.color || 'gray',
             tags: fullConn.tags || []
           })
-        } catch (err) {
+        } catch {
           setError('Failed to load connection')
         }
       }
@@ -115,7 +119,7 @@ export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveCon
 
   if (!isOpen) return null
 
-  const handleAddTag = (tag: string) => {
+  const handleAddTag = (tag: string): void => {
     const trimmed = tag.trim().toLowerCase()
     if (trimmed && !form.tags.includes(trimmed)) {
       setForm({ ...form, tags: [...form.tags, trimmed] })
@@ -123,11 +127,11 @@ export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveCon
     setTagInput('')
   }
 
-  const handleRemoveTag = (tag: string) => {
+  const handleRemoveTag = (tag: string): void => {
     setForm({ ...form, tags: form.tags.filter((t) => t !== tag) })
   }
 
-  const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === 'Enter') {
       e.preventDefault()
       handleAddTag(tagInput)
@@ -140,7 +144,7 @@ export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveCon
     }
   }
 
-  const handleTestConnection = async () => {
+  const handleTestConnection = async (): Promise<void> => {
     setTesting(true)
     setError(null)
     setTested(false)
@@ -165,21 +169,15 @@ export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveCon
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
     setLoading(true)
     setError(null)
 
     try {
-      // Validate name and password
+      // Validate name
       if (!form.name.trim()) {
         setError('Connection name is required')
-        setLoading(false)
-        return
-      }
-
-      if (!form.password) {
-        setError('Password is required')
         setLoading(false)
         return
       }
@@ -229,7 +227,7 @@ export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveCon
               type="text"
               placeholder="Production, Staging, Local Dev..."
               value={form.name}
-              onChange={(e) => {
+              onChange={(e): void => {
                 setForm({ ...form, name: e.target.value })
               }}
               className="w-full px-3 py-2 rounded bg-tertiary border border-default text-white placeholder-tertiary text-sm focus:border-accent focus:outline-none transition-colors"
@@ -245,7 +243,7 @@ export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveCon
                 <button
                   key={option.value}
                   type="button"
-                  onClick={() => setForm({ ...form, color: option.value })}
+                  onClick={(): void => setForm({ ...form, color: option.value })}
                   className={`w-8 h-8 rounded-full border-2 transition-all flex items-center justify-center ${
                     form.color === option.value
                       ? 'ring-2 ring-accent/30 border-white/50'
@@ -275,7 +273,7 @@ export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveCon
                   {tag}
                   <button
                     type="button"
-                    onClick={() => handleRemoveTag(tag)}
+                    onClick={(): void => handleRemoveTag(tag)}
                     className="hover:text-accent/80 transition-colors"
                   >
                     <X className="w-3 h-3" />
@@ -290,9 +288,9 @@ export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveCon
                     : 'Add tag...'
                 }
                 value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
+                onChange={(e): void => setTagInput(e.target.value)}
                 onKeyDown={handleTagInputKeyDown}
-                onBlur={() => {
+                onBlur={(): void => {
                   if (tagInput.trim()) {
                     handleAddTag(tagInput)
                   }
@@ -312,7 +310,7 @@ export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveCon
               <input
                 type="text"
                 value={form.host}
-                onChange={(e) => {
+                onChange={(e): void => {
                   setForm({ ...form, host: e.target.value })
                   setTested(false)
                 }}
@@ -324,7 +322,7 @@ export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveCon
               <input
                 type="number"
                 value={form.port}
-                onChange={(e) => {
+                onChange={(e): void => {
                   setForm({ ...form, port: Number(e.target.value) })
                   setTested(false)
                 }}
@@ -339,7 +337,7 @@ export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveCon
             <input
               type="text"
               value={form.user}
-              onChange={(e) => {
+              onChange={(e): void => {
                 setForm({ ...form, user: e.target.value })
                 setTested(false)
               }}
@@ -349,21 +347,22 @@ export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveCon
 
           {/* Password */}
           <div>
-            <label className="block text-xs font-medium text-secondary mb-1.5">Password *</label>
+            <label className="block text-xs font-medium text-secondary mb-1.5">
+              Password <span className="text-tertiary font-normal">(optional)</span>
+            </label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={form.password}
-                onChange={(e) => {
+                onChange={(e): void => {
                   setForm({ ...form, password: e.target.value })
                   setTested(false)
                 }}
                 className="w-full px-3 py-2 pr-10 rounded bg-tertiary border border-default text-white text-sm focus:border-accent focus:outline-none transition-colors"
-                required
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={(): void => setShowPassword(!showPassword)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-tertiary hover:text-secondary transition-colors"
                 title={showPassword ? 'Hide password' : 'Show password'}
               >
@@ -397,7 +396,7 @@ export function SaveConnectionModal({ isOpen, onClose, editConnection }: SaveCon
             <button
               type="button"
               onClick={handleTestConnection}
-              disabled={testing || loading || !form.password}
+              disabled={testing || loading}
               className="px-4 py-2 rounded bg-secondary hover:bg-tertiary disabled:bg-tertiary disabled:text-tertiary border border-default text-primary text-sm font-medium transition-colors"
             >
               {testing ? 'Testing...' : 'Test'}

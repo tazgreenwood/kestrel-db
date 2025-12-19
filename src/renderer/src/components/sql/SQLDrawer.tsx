@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Editor, { loader } from '@monaco-editor/react'
 import {
   Play,
@@ -125,7 +125,7 @@ interface SQLDrawerProps {
   onResultsChange: (hasResults: boolean) => void
 }
 
-export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
+export function SQLDrawer({ onResultsChange }: SQLDrawerProps): React.JSX.Element | null {
   const drawerOpen = useSQLStore((state) => state.drawerOpen)
   const drawerWidth = useSQLStore((state) => state.drawerWidth)
   const currentQuery = useSQLStore((state) => state.currentQuery)
@@ -169,22 +169,22 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
   const completionProviderRef = useRef<monaco.IDisposable | null>(null)
 
   // Handle editor mount
-  const handleEditorMount = (editor: editor.IStandaloneCodeEditor) => {
+  const handleEditorMount = (editor: editor.IStandaloneCodeEditor): void => {
     editorRef.current = editor
 
     // Add Cmd+Enter keyboard shortcut to execute query
-    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, (): void => {
       handleExecuteQuery()
     })
 
     // Add Cmd+S keyboard shortcut to save query
-    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, (): void => {
       handleSaveQuery()
     })
   }
 
   // Execute query
-  const handleExecuteQuery = async () => {
+  const handleExecuteQuery = async (): Promise<void> => {
     // Get query from editor if available (for Cmd+Enter), otherwise use state
     const query = editorRef.current ? editorRef.current.getValue().trim() : currentQuery.trim()
     if (!query) {
@@ -240,7 +240,7 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
   }
 
   // Save query modal
-  const handleSaveQuery = () => {
+  const handleSaveQuery = (): void => {
     if (!currentQuery.trim()) {
       showToast?.('Query cannot be empty', 'error')
       return
@@ -248,7 +248,7 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
     setShowSaveModal(true)
   }
 
-  const handleConfirmSave = () => {
+  const handleConfirmSave = (): void => {
     if (!saveQueryName.trim()) {
       showToast?.('Query name cannot be empty', 'error')
       return
@@ -280,11 +280,11 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
   useEffect(() => {
     if (!drawerOpen || !currentDb || tables.length === 0) return
 
-    const fetchSchemas = async () => {
+    const fetchSchemas = async (): Promise<void> => {
       const schemas = new Map<string, ColumnInfo[]>()
 
       // Fetch columns for all tables in parallel
-      const promises = tables.map(async (table) => {
+      const promises = tables.map(async (table): Promise<void> => {
         try {
           const result = await window.api.db.getTableColumns(table.name)
           if (result.success && result.data) {
@@ -371,7 +371,10 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
 
     // Register new completion provider
     const provider = monaco.languages.registerCompletionItemProvider('sql', {
-      provideCompletionItems: (model, position) => {
+      provideCompletionItems: (
+        model,
+        position
+      ): monaco.languages.ProviderResult<monaco.languages.CompletionList> => {
         const suggestions: monaco.languages.CompletionItem[] = []
 
         const word = model.getWordUntilPosition(position)
@@ -383,7 +386,7 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
         }
 
         // SQL Keywords
-        SQL_KEYWORDS.forEach((keyword) => {
+        SQL_KEYWORDS.forEach((keyword): void => {
           suggestions.push({
             label: keyword,
             kind: monaco.languages.CompletionItemKind.Keyword,
@@ -395,7 +398,7 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
         })
 
         // Table name suggestions
-        tables.forEach((table) => {
+        tables.forEach((table): void => {
           suggestions.push({
             label: table.name,
             kind: monaco.languages.CompletionItemKind.Class,
@@ -407,8 +410,8 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
         })
 
         // Column suggestions for all tables
-        tableSchemas.forEach((columns, tableName) => {
-          columns.forEach((column) => {
+        tableSchemas.forEach((columns, tableName): void => {
+          columns.forEach((column): void => {
             suggestions.push({
               label: `${tableName}.${column.name}`,
               kind: monaco.languages.CompletionItemKind.Field,
@@ -463,13 +466,13 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
   useEffect(() => {
     if (!isResizing) return
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e: MouseEvent): void => {
       // For right-side drawer, calculate width from right edge
       const newWidth = window.innerWidth - e.clientX
       setDrawerWidth(newWidth)
     }
 
-    const handleMouseUp = () => {
+    const handleMouseUp = (): void => {
       setIsResizing(false)
     }
 
@@ -510,7 +513,7 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
             height="100%"
             defaultLanguage="sql"
             value={currentQuery}
-            onChange={(value) => setCurrentQuery(value || '')}
+            onChange={(value): void => setCurrentQuery(value || '')}
             onMount={handleEditorMount}
             theme={monacoThemeName}
             options={{
@@ -589,7 +592,7 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
         {/* History */}
         <div className="shrink-0 border-t border-default">
           <button
-            onClick={() => setHistoryExpanded(!historyExpanded)}
+            onClick={(): void => setHistoryExpanded(!historyExpanded)}
             className="w-full px-4 py-2 flex items-center gap-2 hover:bg-tertiary transition-colors text-left"
           >
             {historyExpanded ? (
@@ -612,7 +615,7 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
                   {queryHistory.map((item) => (
                     <button
                       key={item.id}
-                      onClick={() => loadFromHistory(item.id)}
+                      onClick={(): void => loadFromHistory(item.id)}
                       className="w-full text-left px-2 py-1.5 rounded hover:bg-tertiary transition-colors group"
                     >
                       <div className="text-xs text-primary font-mono truncate group-hover:text-accent transition-colors">
@@ -638,7 +641,7 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
         {/* Saved Queries */}
         <div className="shrink-0 border-t border-default">
           <button
-            onClick={() => setSavedExpanded(!savedExpanded)}
+            onClick={(): void => setSavedExpanded(!savedExpanded)}
             className="w-full px-4 py-2 flex items-center gap-2 hover:bg-tertiary transition-colors text-left"
           >
             {savedExpanded ? (
@@ -664,7 +667,7 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
                       className="flex items-center gap-1 px-2 py-1.5 rounded hover:bg-tertiary transition-colors group"
                     >
                       <button
-                        onClick={() => loadSavedQuery(query.id)}
+                        onClick={(): void => loadSavedQuery(query.id)}
                         className="flex-1 text-left min-w-0"
                       >
                         <div className="text-xs text-primary font-medium truncate group-hover:text-accent transition-colors">
@@ -675,7 +678,7 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
                         </div>
                       </button>
                       <button
-                        onClick={() => deleteSavedQuery(query.id)}
+                        onClick={(): void => deleteSavedQuery(query.id)}
                         className="p-1 opacity-0 group-hover:opacity-100 hover:bg-error/20 hover:text-error rounded transition-all"
                         title="Delete query"
                       >
@@ -692,7 +695,7 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
         {/* Resize handle */}
         <div
           ref={resizerRef}
-          onMouseDown={() => setIsResizing(true)}
+          onMouseDown={(): void => setIsResizing(true)}
           className="absolute top-0 left-0 w-1 h-full cursor-col-resize hover:bg-accent/50 transition-colors"
           style={{ transform: 'translateX(-50%)' }}
         />
@@ -702,11 +705,11 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
       {showSaveModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-          onClick={() => setShowSaveModal(false)}
+          onClick={(): void => setShowSaveModal(false)}
         >
           <div
             className="bg-secondary border border-default rounded-lg p-6 w-96 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e): void => e.stopPropagation()}
           >
             <h3 className="text-lg font-semibold text-primary mb-4">Save Query</h3>
 
@@ -718,11 +721,11 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
                 <input
                   type="text"
                   value={saveQueryName}
-                  onChange={(e) => setSaveQueryName(e.target.value)}
+                  onChange={(e): void => setSaveQueryName(e.target.value)}
                   placeholder="e.g., Active Users Report"
                   className="w-full px-3 py-2 bg-primary border border-default rounded text-primary placeholder-tertiary text-sm focus:border-accent focus:outline-none"
                   autoFocus
-                  onKeyDown={(e) => {
+                  onKeyDown={(e): void => {
                     if (e.key === 'Enter') handleConfirmSave()
                     if (e.key === 'Escape') setShowSaveModal(false)
                   }}
@@ -731,13 +734,13 @@ export function SQLDrawer({ onResultsChange }: SQLDrawerProps) {
 
               <div className="flex gap-2 justify-end">
                 <button
-                  onClick={() => setShowSaveModal(false)}
+                  onClick={(): void => setShowSaveModal(false)}
                   className="px-4 py-2 bg-tertiary hover:bg-tertiary/80 text-primary rounded text-sm transition-colors"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={handleConfirmSave}
+                  onClick={(): void => handleConfirmSave()}
                   disabled={!saveQueryName.trim()}
                   className="px-4 py-2 bg-accent hover:bg-accent/80 disabled:bg-accent/50 text-white rounded text-sm transition-colors disabled:cursor-not-allowed"
                 >

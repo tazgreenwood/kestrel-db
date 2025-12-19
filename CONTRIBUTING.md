@@ -36,7 +36,7 @@ This project follows a standard code of conduct:
 1. **Fork the repository** on GitHub
 2. **Clone your fork** locally:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/kestrel-db.git
+   git clone https://github.com/your-username/kestrel-db.git
    cd kestrel-db
    ```
 3. **Add upstream remote**:

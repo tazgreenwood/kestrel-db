@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { ChevronRight, Search, Command, X, Settings, ChevronDown, Code2 } from 'lucide-react'
 import { useAppStore } from '../../store/useAppStore'
 import { useConnectionsStore } from '../../store/useConnectionsStore'
@@ -32,7 +32,7 @@ export function Header({
   onOpenSettings,
   onOpenSQLEditor,
   onShowToast
-}: HeaderProps) {
+}: HeaderProps): React.JSX.Element {
   const disconnect = useAppStore((state) => state.disconnect)
   const connectionName = useAppStore((state) => state.connectionName)
   const connectionColor = useAppStore((state) => state.connectionColor)
@@ -61,7 +61,7 @@ export function Header({
   }, [showConnectionDropdown])
 
   // Handle switching to a different connection
-  const handleSwitchConnection = async (connectionId: string) => {
+  const handleSwitchConnection = async (connectionId: string): Promise<void> => {
     if (switchingConnection) return
 
     setSwitchingConnection(true)

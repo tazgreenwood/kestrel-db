@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Loader2, Plus, Edit2, Trash2, Settings, Tag, Search } from 'lucide-react'
 import {
   useConnectionsStore,
@@ -19,7 +19,7 @@ interface ConnectionPageProps {
   ) => void
 }
 
-function KestrelBackground() {
+function KestrelBackground(): React.JSX.Element {
   return (
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none bg-primary">
       {/* Subtle radial gradient for depth */}
@@ -43,7 +43,7 @@ const COLOR_MAP: Record<ConnectionColor, { borderClass: string; dotClass: string
   gray: { borderClass: 'border-l-gray-500', dotClass: 'bg-gray-500', hex: '#6b7280' }
 }
 
-export function ConnectionPage({ onSuccess }: ConnectionPageProps) {
+export function ConnectionPage({ onSuccess }: ConnectionPageProps): React.JSX.Element {
   const [loading, setLoading] = useState(false)
   const [connectingTo, setConnectingTo] = useState<SavedConnection | null>(null)
   const [showSaveModal, setShowSaveModal] = useState(false)
@@ -100,7 +100,7 @@ export function ConnectionPage({ onSuccess }: ConnectionPageProps) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
-  const handleConnect = async (conn: SavedConnection) => {
+  const handleConnect = async (conn: SavedConnection): Promise<void> => {
     setLoading(true)
     setConnectingTo(conn)
 
@@ -130,20 +130,20 @@ export function ConnectionPage({ onSuccess }: ConnectionPageProps) {
     }
   }
 
-  const handleEdit = (conn: SavedConnection, e: React.MouseEvent) => {
+  const handleEdit = (conn: SavedConnection, e: React.MouseEvent): void => {
     e.stopPropagation()
     setEditingConnection(conn)
     setShowSaveModal(true)
   }
 
-  const handleDelete = async (id: string, e: React.MouseEvent) => {
+  const handleDelete = async (id: string, e: React.MouseEvent): Promise<void> => {
     e.stopPropagation()
     if (confirm('Delete this connection?')) {
       await deleteConnection(id)
     }
   }
 
-  const handleNewConnection = () => {
+  const handleNewConnection = (): void => {
     setEditingConnection(null)
     setShowSaveModal(true)
   }
@@ -229,132 +229,138 @@ export function ConnectionPage({ onSuccess }: ConnectionPageProps) {
           )}
 
           {/* Connections List */}
-          <div className="max-h-[60vh] overflow-y-auto custom-scrollbar mb-6 max-w-3xl mx-auto px-1 py-2">
-            <div className="space-y-2">
-              {filteredConnections.map((conn, index) => {
-                const colors = COLOR_MAP[conn.color || 'gray']
-                const isRecent = index === 0
-                const timeSince = Date.now() - conn.lastUsed
-                const daysAgo = Math.floor(timeSince / (1000 * 60 * 60 * 24))
-                const hoursAgo = Math.floor(timeSince / (1000 * 60 * 60))
-                const minutesAgo = Math.floor(timeSince / (1000 * 60))
+          {connections.length > 0 && (
+            <div className="max-h-[60vh] overflow-y-auto custom-scrollbar mb-6 max-w-3xl mx-auto px-1 py-2">
+              <div className="space-y-2">
+                {filteredConnections.map((conn, index) => {
+                  const colors = COLOR_MAP[conn.color || 'gray']
+                  const isRecent = index === 0
+                  const timeSince = Date.now() - conn.lastUsed
+                  const daysAgo = Math.floor(timeSince / (1000 * 60 * 60 * 24))
+                  const hoursAgo = Math.floor(timeSince / (1000 * 60 * 60))
+                  const minutesAgo = Math.floor(timeSince / (1000 * 60))
 
-                let timeLabel = ''
-                if (daysAgo > 0) {
-                  timeLabel = `${daysAgo}d ago`
-                } else if (hoursAgo > 0) {
-                  timeLabel = `${hoursAgo}h ago`
-                } else if (minutesAgo > 0) {
-                  timeLabel = `${minutesAgo}m ago`
-                } else {
-                  timeLabel = 'Just now'
-                }
+                  let timeLabel = ''
+                  if (daysAgo > 0) {
+                    timeLabel = `${daysAgo}d ago`
+                  } else if (hoursAgo > 0) {
+                    timeLabel = `${hoursAgo}h ago`
+                  } else if (minutesAgo > 0) {
+                    timeLabel = `${minutesAgo}m ago`
+                  } else {
+                    timeLabel = 'Just now'
+                  }
 
-                const isConnecting = loading && connectingTo?.id === conn.id
+                  const isConnecting = loading && connectingTo?.id === conn.id
 
-                return (
-                  <div
-                    key={conn.id}
-                    onClick={() => !loading && handleConnect(conn)}
-                    className="group relative bg-secondary hover:bg-secondary/90 border border-default border-l-4 rounded-lg px-4 py-2.5 cursor-pointer transition-all hover:scale-[1.01]"
-                    style={{
-                      borderLeftColor: colors.hex,
-                      boxShadow: 'none',
-                      transition: 'all 0.2s ease-in-out'
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isConnecting) {
-                        e.currentTarget.style.boxShadow = `0 0 20px ${colors.hex}40, 0 4px 6px -1px rgba(0, 0, 0, 0.1)`
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  >
-                    <div className="pr-16">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-2.5 h-2.5 rounded-full ${colors.dotClass} flex-shrink-0`}
-                        />
-                        <div className="flex-1 min-w-0 flex items-baseline gap-3">
-                          <h3 className="text-white font-semibold text-sm truncate">{conn.name}</h3>
-                          <span className="text-tertiary text-xs truncate">
-                            {conn.user}@{conn.host}:{conn.port}
-                          </span>
-                          <span className="text-tertiary text-xs flex-shrink-0 ml-auto">
-                            {timeLabel}
-                          </span>
+                  return (
+                    <div
+                      key={conn.id}
+                      onClick={() => !loading && handleConnect(conn)}
+                      className="group relative bg-secondary hover:bg-secondary/90 border border-default border-l-4 rounded-lg px-4 py-2.5 cursor-pointer transition-all hover:scale-[1.01]"
+                      style={{
+                        borderLeftColor: colors.hex,
+                        boxShadow: 'none',
+                        transition: 'all 0.2s ease-in-out'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isConnecting) {
+                          e.currentTarget.style.boxShadow = `0 0 20px ${colors.hex}40, 0 4px 6px -1px rgba(0, 0, 0, 0.1)`
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.boxShadow = 'none'
+                      }}
+                    >
+                      <div className="pr-16">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-2.5 h-2.5 rounded-full ${colors.dotClass} flex-shrink-0`}
+                          />
+                          <div className="flex-1 min-w-0 flex items-baseline gap-3">
+                            <h3 className="text-white font-semibold text-sm truncate">
+                              {conn.name}
+                            </h3>
+                            <span className="text-tertiary text-xs truncate">
+                              {conn.user}@{conn.host}:{conn.port}
+                            </span>
+                            <span className="text-tertiary text-xs flex-shrink-0 ml-auto">
+                              {timeLabel}
+                            </span>
+                          </div>
+                          {isRecent && (
+                            <div className="px-2 py-0.5 bg-accent/20 border border-accent/30 rounded text-[10px] font-medium text-accent flex-shrink-0">
+                              Recent
+                            </div>
+                          )}
                         </div>
-                        {isRecent && (
-                          <div className="px-2 py-0.5 bg-accent/20 border border-accent/30 rounded text-[10px] font-medium text-accent flex-shrink-0">
-                            Recent
+                        {conn.tags && conn.tags.length > 0 && (
+                          <div className="flex items-center gap-1.5 mt-2 ml-[18px]">
+                            {conn.tags.map((tag) => (
+                              <span
+                                key={tag}
+                                className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-accent/10 border border-accent/20 rounded text-[10px] text-accent"
+                              >
+                                {tag}
+                              </span>
+                            ))}
                           </div>
                         )}
                       </div>
-                      {conn.tags && conn.tags.length > 0 && (
-                        <div className="flex items-center gap-1.5 mt-2 ml-[18px]">
-                          {conn.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-accent/10 border border-accent/20 rounded text-[10px] text-accent"
-                            >
-                              {tag}
-                            </span>
-                          ))}
+
+                      {/* Action Buttons */}
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-1">
+                        <button
+                          onClick={(e) => handleEdit(conn, e)}
+                          className="p-1 bg-primary/90 hover:bg-accent/20 rounded transition-colors"
+                          title="Edit"
+                        >
+                          <Edit2 className="w-3 h-3 text-accent" />
+                        </button>
+                        <button
+                          onClick={(e) => handleDelete(conn.id, e)}
+                          className="p-1 bg-primary/90 hover:bg-error/20 rounded transition-colors"
+                          title="Delete"
+                        >
+                          <Trash2 className="w-3 h-3 text-error" />
+                        </button>
+                      </div>
+
+                      {/* Loading Overlay */}
+                      {isConnecting && (
+                        <div className="absolute inset-0 bg-primary/80 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                          <div className="flex items-center gap-2 text-accent">
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <span className="text-sm font-medium">Connecting...</span>
+                          </div>
                         </div>
                       )}
                     </div>
+                  )
+                })}
 
-                    {/* Action Buttons */}
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-1">
-                      <button
-                        onClick={(e) => handleEdit(conn, e)}
-                        className="p-1 bg-primary/90 hover:bg-accent/20 rounded transition-colors"
-                        title="Edit"
-                      >
-                        <Edit2 className="w-3 h-3 text-accent" />
-                      </button>
-                      <button
-                        onClick={(e) => handleDelete(conn.id, e)}
-                        className="p-1 bg-primary/90 hover:bg-error/20 rounded transition-colors"
-                        title="Delete"
-                      >
-                        <Trash2 className="w-3 h-3 text-error" />
-                      </button>
+                {/* New Connection Button - Only show when there are existing connections */}
+                {connections.length > 0 && (
+                  <button
+                    onClick={handleNewConnection}
+                    disabled={loading}
+                    className="w-full bg-secondary/90 hover:bg-secondary border-2 border-dashed border-default hover:border-solid hover:border-accent rounded-lg px-4 py-3 transition-all flex items-center justify-center gap-2 group hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:scale-[1.01]"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-accent/10 group-hover:bg-accent/20 flex items-center justify-center transition-colors">
+                      <Plus className="w-4 h-4 text-accent" />
                     </div>
-
-                    {/* Loading Overlay */}
-                    {isConnecting && (
-                      <div className="absolute inset-0 bg-primary/80 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                        <div className="flex items-center gap-2 text-accent">
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                          <span className="text-sm font-medium">Connecting...</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-
-              {/* New Connection Button */}
-              <button
-                onClick={handleNewConnection}
-                disabled={loading}
-                className="w-full bg-secondary/90 hover:bg-secondary border-2 border-dashed border-default hover:border-solid hover:border-accent rounded-lg px-4 py-3 transition-all flex items-center justify-center gap-2 group hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:scale-[1.01]"
-              >
-                <div className="w-8 h-8 rounded-full bg-accent/10 group-hover:bg-accent/20 flex items-center justify-center transition-colors">
-                  <Plus className="w-4 h-4 text-accent" />
-                </div>
-                <span className="text-sm font-medium text-secondary group-hover:text-accent transition-colors">
-                  New Connection
-                </span>
-              </button>
+                    <span className="text-sm font-medium text-secondary group-hover:text-accent transition-colors">
+                      New Connection
+                    </span>
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Empty State */}
           {connections.length === 0 && !loading && (
-            <div className="text-center py-12">
+            <div className="text-center pt-4 pb-12">
               <div className="text-6xl mb-4">🗄️</div>
               <h3 className="text-white text-lg font-semibold mb-2">No Connections Yet</h3>
               <p className="text-secondary text-sm mb-6">

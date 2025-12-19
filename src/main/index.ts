@@ -300,7 +300,7 @@ function setupFileDialogHandlers(): void {
 
 // Setup keychain handlers for secure credential storage
 function setupKeychainHandlers(): void {
-  const SERVICE_NAME = 'velocity-db'
+  const SERVICE_NAME = 'kestrel-db'
 
   // Save password to keychain
   ipcMain.handle('keychain:set-password', async (_, account: string, password: string) => {

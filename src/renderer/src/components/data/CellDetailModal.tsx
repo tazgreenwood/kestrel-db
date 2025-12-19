@@ -1,19 +1,19 @@
+import React, { useState, useEffect } from 'react'
 import { X, Copy, Check } from 'lucide-react'
-import { useState, useEffect } from 'react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 interface CellDetailModalProps {
-  value: any
+  value: unknown
   onClose: () => void
 }
 
-export function CellDetailModal({ value, onClose }: CellDetailModalProps) {
+export function CellDetailModal({ value, onClose }: CellDetailModalProps): React.JSX.Element {
   const [copied, setCopied] = useState(false)
 
   // ESC key to close
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === 'Escape') {
         onClose()
       }
@@ -32,17 +32,17 @@ export function CellDetailModal({ value, onClose }: CellDetailModalProps) {
   } else {
     // Try to parse string as JSON just in case it's a JSON string in the DB
     try {
-      const parsed = JSON.parse(value)
+      const parsed = JSON.parse(String(value))
       if (typeof parsed === 'object' && parsed !== null) {
         displayValue = JSON.stringify(parsed, null, 2)
         isJson = true
       }
-    } catch (e) {
+    } catch {
       // Not JSON, that's fine
     }
   }
 
-  const handleCopy = () => {
+  const handleCopy = (): void => {
     navigator.clipboard.writeText(displayValue)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)

@@ -16,22 +16,22 @@
 
 ### 2. Auto-Update Configuration
 
-- [ ] **Decide:** Choose one of the following options:
+- [x] **Decide:** Choose one of the following options:
   - [ ] **Option A:** Set up real update server and update URL in `electron-builder.yml:43`
   - [ ] **Option B:** Remove auto-update functionality for v1 (comment out `publish` section)
-  - [ ] **Option C:** Use GitHub Releases as update provider (change to `provider: github`)
+  - [x] **Option C:** Use GitHub Releases as update provider (change to `provider: github`)
 - **File:** `electron-builder.yml:42-43`
-- **Current:** `url: https://example.com/auto-updates` (placeholder)
+- **Status:** ✅ Configured to use GitHub Releases
 
 ### 3. Third-Party License Attribution
 
-- [ ] **Create:** `THIRD_PARTY_LICENSES.md` in project root
-- [ ] **Include:** Full MIT license text for each theme:
-  - [ ] Dracula Theme (Copyright © 2023 Dracula Theme)
-  - [ ] One Dark Pro (Copyright © 2013-2022 Binaryify)
-  - [ ] Tokyo Night (Copyright © enkia)
-- [ ] **Add:** Link to this file in README.md under License/Legal section
-- [ ] **Optional:** Also credit other major dependencies (Electron, React, etc.)
+- [x] **Create:** `THIRD_PARTY_LICENSES.md` in project root
+- [x] **Include:** Full MIT license text for each theme:
+  - [x] Dracula Theme (Copyright © 2023 Dracula Theme)
+  - [x] One Dark Pro (Copyright © 2013-2022 Binaryify)
+  - [x] Tokyo Night (Copyright © enkia)
+- [x] **Add:** Link to this file in README.md under License/Legal section
+- [x] **Optional:** Also credit other major dependencies (Electron, React, etc.)
 
 **Template structure:**
 
@@ -75,34 +75,30 @@
 
 ### 4. Fix Incorrect Comment in themes.ts
 
-- [ ] **Fix:** Update comment block for Tokyo Night theme
+- [x] **Fix:** Update comment block for Tokyo Night theme
   - **File:** `src/renderer/src/theme/themes.ts:389-393`
-  - **Current:** Says "GitHub Dark Theme"
-  - **Change to:** "Tokyo Night" theme description
-  - **Remove:** Incorrect link to `github.com/primer/github-vscode-theme`
+  - **Status:** ✅ Fixed - Comment now correctly says "Tokyo Night Theme"
 
 ### 5. Fix TypeScript `any` Types
 
-- [ ] **Fix:** Replace `any` types with proper types in:
-  - [ ] `src/main/database.ts` (11 instances at lines: 307, 307, 356, 419, 520, 524, 542, 575, 593)
-  - [ ] `src/preload/index.d.ts` (8 instances at lines: 48, 54, 104, 109, 110, 112, 113)
-  - [ ] `src/preload/index.ts` (6 instances at lines: 50, 56, 118, 119, 119, 123)
-- [ ] **Verify:** `npm run typecheck` passes after fixes
-- **Note:** These violate your strict TypeScript policy in CLAUDE.md
+- [x] **Fix:** Replace `any` types with proper types in:
+  - [x] `src/main/database.ts` - Replaced with `Record<string, unknown>[]` and `unknown`
+  - [x] `src/preload/index.d.ts` - Added `UpdateInfo` and `UpdateProgress` interfaces
+  - [x] `src/preload/index.ts` - Used proper types throughout
+- [x] **Verify:** `npm run typecheck` passes after fixes
+- **Status:** ✅ All critical `any` types fixed, TypeScript passes with no errors
 
 ### 6. Update Linux Maintainer Field
 
-- [ ] **Fix:** Change maintainer in electron-builder config
+- [x] **Fix:** Change maintainer in electron-builder config
   - **File:** `electron-builder.yml:36`
-  - **Current:** `maintainer: electronjs.org`
-  - **Change to:** Your email, e.g., `maintainer: taz.greenwood@example.com`
+  - **Status:** ✅ Changed to `tazgreenwood <taz@kestreldb.com>`
 
 ### 7. Run Prettier Formatting
 
-- [ ] **Run:** `npm run format`
-- [ ] **Verify:** All Prettier warnings resolved
-- [ ] **Commit:** Format changes
-- **Files affected:** database.ts, index.ts, index.d.ts (various line issues)
+- [x] **Run:** `npm run format`
+- [x] **Verify:** All Prettier warnings resolved
+- **Status:** ✅ All files formatted correctly
 
 ---
 
@@ -110,10 +106,10 @@
 
 ### 8. Create CHANGELOG.md
 
-- [ ] **Create:** `CHANGELOG.md` in project root
-- [ ] **Document:** v1.0.0 release notes
-- [ ] **Include:** All major features, known limitations
-- [ ] **Reference:** This file is mentioned in CONTRIBUTING.md but doesn't exist yet
+- [x] **Create:** `CHANGELOG.md` in project root
+- [x] **Document:** v1.0.0 release notes
+- [x] **Include:** All major features, known limitations
+- **Status:** ✅ Comprehensive changelog created with full feature list, technical details, and attribution
 
 **Suggested template:**
 
@@ -151,22 +147,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 9. Update README.md
 
-- [ ] **Fix:** GitHub clone URL
-  - **Line:** 107
-  - **Current:** `https://github.com/yourusername/kestrel-db.git`
-  - **Change to:** `https://github.com/tazgreenwood/kestrel-db.git`
-- [ ] **Add:** At least 2-3 screenshots
-  - [ ] Connection page with saved connections
-  - [ ] Data grid showing table data and filtering
-  - [ ] Command palette in action
-  - **Current:** Line 25 says "Screenshots coming soon"
+- [x] **Fix:** GitHub clone URL
+  - **Status:** ✅ Updated to `https://github.com/tazgreenwood/kestrel-db.git`
+  - **Also fixed:** CONTRIBUTING.md placeholder to use `your-username` convention
+- [x] **Add:** Screenshots and demo GIF
+  - [x] Connection page with saved connections (hero image)
+  - [x] Demo GIF showing keyboard-first workflow (4.7MB)
+  - [x] Data grid with filtering screenshot
+  - [x] Command palette search screenshot
+  - [x] Command palette filter syntax screenshot
+  - **Status:** ✅ Added hero image, animated demo, and 3 feature screenshots
 
 ### 10. Verify Version Display
 
-- [ ] **Test:** Settings > About shows correct version from package.json
-  - **File:** `src/renderer/src/components/modals/SettingsModal.tsx:1309`
-  - **Current:** Hardcoded fallback `currentVersion || '1.0.0'`
-  - **Verify:** `window.api.update.getVersion()` returns actual version
+- [x] **Test:** Settings > About shows correct version from package.json
+  - **Status:** ✅ Verified - Uses `app.getVersion()` which reads from package.json
+  - **Implementation:** `src/main/index.ts:421` correctly returns `app.getVersion()`
+  - **Fallback:** Settings modal has `'1.0.0'` fallback which matches current version
 
 ---
 
@@ -174,10 +171,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 11. Add Catppuccin Mocha Theme
 
-- [ ] **Add:** Catppuccin Mocha color scheme (MIT licensed)
-- [ ] **Source:** https://github.com/catppuccin/catppuccin
-- [ ] **Include:** Attribution in THIRD_PARTY_LICENSES.md
-- [ ] **Test:** Verify all UI elements look good with new theme
+- [x] **Add:** Catppuccin Mocha color scheme (MIT licensed)
+- [x] **Source:** https://github.com/catppuccin/catppuccin
+- [x] **Include:** Attribution in THIRD_PARTY_LICENSES.md
+- [x] **Test:** Verify all UI elements look good with new theme
 
 ### 12. Set Up Basic Testing
 

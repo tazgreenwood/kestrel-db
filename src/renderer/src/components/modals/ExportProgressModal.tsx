@@ -1,3 +1,4 @@
+import React from 'react'
 import { X, FileDown, Loader2 } from 'lucide-react'
 
 interface ExportProgressModalProps {
@@ -16,7 +17,7 @@ export function ExportProgressModal({
   totalRows,
   format,
   onCancel
-}: ExportProgressModalProps) {
+}: ExportProgressModalProps): React.JSX.Element | null {
   if (!isOpen) return null
 
   return (

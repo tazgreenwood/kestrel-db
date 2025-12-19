@@ -34,7 +34,7 @@ interface AppState {
   // Data Cache
   availableDatabases: string[]
   tables: TableInfo[]
-  tableData: any[]
+  tableData: Record<string, unknown>[]
   tableColumns: ColumnInfo[]
 
   // Query State

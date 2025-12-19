@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { X, ChevronRight, ChevronLeft, Command, Code2, Zap, Database, Check } from 'lucide-react'
 import { getModifierKey } from '../../utils/platform'
 
@@ -7,7 +7,16 @@ interface OnboardingModalProps {
   onComplete: () => void
 }
 
-const getOnboardingSteps = (modKey: string) => [
+interface OnboardingStep {
+  id: string
+  title: string
+  subtitle: string
+  description: string
+  icon: React.JSX.Element
+  features: string[]
+}
+
+const getOnboardingSteps = (modKey: string): OnboardingStep[] => [
   {
     id: 'welcome',
     title: 'Welcome to Kestrel',
@@ -82,7 +91,10 @@ const getOnboardingSteps = (modKey: string) => [
   }
 ]
 
-export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
+export function OnboardingModal({
+  isOpen,
+  onComplete
+}: OnboardingModalProps): React.JSX.Element | null {
   const [currentStep, setCurrentStep] = useState(0)
   const modKey = getModifierKey()
   const ONBOARDING_STEPS = getOnboardingSteps(modKey)
@@ -90,7 +102,7 @@ export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
   const isFirstStep = currentStep === 0
   const isLastStep = currentStep === ONBOARDING_STEPS.length - 1
 
-  const handleNext = () => {
+  const handleNext = (): void => {
     if (isLastStep) {
       onComplete()
     } else {
@@ -98,13 +110,13 @@ export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
     }
   }
 
-  const handlePrevious = () => {
+  const handlePrevious = (): void => {
     if (!isFirstStep) {
       setCurrentStep(currentStep - 1)
     }
   }
 
-  const handleSkip = () => {
+  const handleSkip = (): void => {
     onComplete()
   }
 

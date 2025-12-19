@@ -3,7 +3,7 @@ import { ElectronAPI } from '@electron-toolkit/preload'
 export interface DbCredentials {
   host: string
   user: string
-  password: string
+  password?: string
   port?: number
 }
 
@@ -45,16 +45,29 @@ export interface QueryOptions {
 }
 
 export interface QueryResult {
-  data: any[]
+  data: Record<string, unknown>[]
   totalCount: number
   hasMore: boolean
 }
 
 export interface QueryExecutionResult {
-  data: any[]
+  data: Record<string, unknown>[]
   fields: string[]
   rowCount: number
   executionTime: number
+}
+
+export interface UpdateInfo {
+  version: string
+  releaseDate?: string
+  releaseNotes?: string
+}
+
+export interface UpdateProgress {
+  percent?: number
+  bytesPerSecond?: number
+  transferred?: number
+  total?: number
 }
 
 interface DatabaseAPI {
@@ -112,16 +125,16 @@ declare global {
         }>
       }
       update: {
-        checkForUpdates: () => Promise<{ success: boolean; data?: any; error?: string }>
+        checkForUpdates: () => Promise<{ success: boolean; data?: UpdateInfo; error?: string }>
         downloadUpdate: () => Promise<{ success: boolean; error?: string }>
         installUpdate: () => Promise<{ success: boolean; error?: string }>
         getVersion: () => Promise<{ success: boolean; data?: string; error?: string }>
         onChecking: (callback: () => void) => () => void
-        onAvailable: (callback: (info: any) => void) => () => void
-        onNotAvailable: (callback: (info: any) => void) => () => void
+        onAvailable: (callback: (info: UpdateInfo) => void) => () => void
+        onNotAvailable: (callback: (info: UpdateInfo) => void) => () => void
         onError: (callback: (error: string) => void) => () => void
-        onDownloadProgress: (callback: (progress: any) => void) => () => void
-        onDownloaded: (callback: (info: any) => void) => () => void
+        onDownloadProgress: (callback: (progress: UpdateProgress) => void) => () => void
+        onDownloaded: (callback: (info: UpdateInfo) => void) => () => void
       }
     }
   }

@@ -1,11 +1,12 @@
+import React, { useMemo, useState, useRef, useEffect, useCallback, memo } from 'react'
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
-  createColumnHelper
+  createColumnHelper,
+  type Row
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { useMemo, useState, useRef, useEffect, useCallback, memo } from 'react'
 import throttle from 'lodash.throttle'
 import {
   Database,
@@ -26,7 +27,7 @@ import { useAppStore } from '../../store/useAppStore'
 import { useSettingsStore } from '../../store/useSettingsStore'
 
 interface DataGridProps {
-  data: any[]
+  data: Record<string, unknown>[]
   tableName: string
   isLoading?: boolean
   totalRows?: number // Override totalRows from store (for custom queries)
@@ -36,7 +37,7 @@ interface DataGridProps {
 interface CellPosition {
   rowIndex: number
   colIndex: number
-  value: any
+  value: unknown
 }
 
 export function DataGrid({
@@ -45,19 +46,19 @@ export function DataGrid({
   isLoading,
   totalRows: totalRowsProp,
   hasMore: hasMoreProp
-}: DataGridProps) {
+}: DataGridProps): React.JSX.Element {
   const [selectedCellPos, setSelectedCellPos] = useState<CellPosition | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [showCopyToast, setShowCopyToast] = useState(false)
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set())
   const [lastSelectedRow, setLastSelectedRow] = useState<number | null>(null)
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>({})
-  const [_resizingColumn, setResizingColumn] = useState<string | null>(null)
+  const [, setResizingColumn] = useState<string | null>(null)
   const [elapsedTime, setElapsedTime] = useState<number>(0)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const selectedCellPosRef = useRef<CellPosition | null>(null)
   const selectedRowsRef = useRef<Set<number>>(new Set())
-  const rowsRef = useRef<any[]>([])
+  const rowsRef = useRef<Row<Record<string, unknown>>[]>([])
   const {
     sortState,
     hasMore: hasMoreFromStore,
@@ -109,7 +110,10 @@ export function DataGrid({
   }, [tableColumns])
 
   // Memoize column helper (only created once)
-  const columnHelper = useMemo(() => createColumnHelper<any>(), [])
+  const columnHelper = useMemo(() => createColumnHelper<Record<string, unknown>>(), [])
+
+  // Extract column keys for dependency tracking
+  const columnKeysString = data.length > 0 ? Object.keys(data[0]).join(',') : ''
 
   // Memoize columns based on column names, not entire data array
   const columns = useMemo(() => {
@@ -128,7 +132,7 @@ export function DataGrid({
         cell: (info) => info.getValue()
       })
     )
-  }, [data.length > 0 ? Object.keys(data[0]).join(',') : '', columnHelper])
+  }, [columnHelper, data])
 
   // Calculate minimum width needed for header (text + icons + padding + resize handle)
   const calculateMinHeaderWidth = (headerText: string): number => {
@@ -164,7 +168,7 @@ export function DataGrid({
     })
 
     setColumnWidths(widths)
-  }, [data.length > 0 ? Object.keys(data[0]).join(',') : ''])
+  }, [columnKeysString, data])
 
   const table = useReactTable({
     data,
@@ -239,7 +243,7 @@ export function DataGrid({
     document.body.style.userSelect = 'none'
     document.body.style.cursor = 'col-resize'
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e: MouseEvent): void => {
       const deltaX = e.clientX - resizeState.startX
       const minWidth = calculateMinHeaderWidth(resizeState.columnId)
       const newWidth = Math.max(minWidth, resizeState.startWidth + deltaX)
@@ -250,7 +254,7 @@ export function DataGrid({
       }))
     }
 
-    const handleMouseUp = () => {
+    const handleMouseUp = (): void => {
       setResizeState(null)
       setResizingColumn(null)
       document.body.style.userSelect = ''
@@ -285,7 +289,7 @@ export function DataGrid({
   useEffect(() => {
     let lastGPressTime = 0 // Track 'g' key press for 'gg' sequence
 
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       const cellPos = selectedCellPosRef.current
       const selectedRowIndices = selectedRowsRef.current
       const currentRows = rowsRef.current
@@ -354,7 +358,7 @@ export function DataGrid({
         const numCols = columns.length
 
         // Helper to move cell selection
-        const moveCell = (newRow: number, newCol: number) => {
+        const moveCell = (newRow: number, newCol: number): void => {
           // Clamp to grid boundaries (stay at edge, don't wrap)
           const clampedRow = Math.max(0, Math.min(numRows - 1, newRow))
           const clampedCol = Math.max(0, Math.min(numCols - 1, newCol))
@@ -482,7 +486,7 @@ export function DataGrid({
   }, [columns, rowVirtualizer]) // Add dependencies for navigation
 
   const handleSortAsc = useCallback(
-    (columnId: string, e: React.MouseEvent) => {
+    (columnId: string, e: React.MouseEvent): void => {
       e.stopPropagation()
       // Toggle: if already sorted ASC, clear sort; otherwise sort ASC
       if (sortState.column === columnId && sortState.direction === 'ASC') {
@@ -495,7 +499,7 @@ export function DataGrid({
   )
 
   const handleSortDesc = useCallback(
-    (columnId: string, e: React.MouseEvent) => {
+    (columnId: string, e: React.MouseEvent): void => {
       e.stopPropagation()
       // Toggle: if already sorted DESC, clear sort; otherwise sort DESC
       if (sortState.column === columnId && sortState.direction === 'DESC') {
@@ -508,7 +512,7 @@ export function DataGrid({
   )
 
   const handleRowSelection = useCallback(
-    (rowIndex: number, e: React.MouseEvent) => {
+    (rowIndex: number, e: React.MouseEvent): void => {
       e.stopPropagation()
 
       if (e.shiftKey && lastSelectedRow !== null) {
@@ -887,14 +891,19 @@ export function DataGrid({
 }
 
 interface CellRendererProps {
-  value: any
+  value: unknown
   showDataTypeColors: boolean
   dateFormat: 'iso' | 'local' | 'relative'
   numberFormat: 'raw' | 'formatted'
 }
 
 const CellRenderer = memo(
-  ({ value, showDataTypeColors, dateFormat, numberFormat }: CellRendererProps) => {
+  ({
+    value,
+    showDataTypeColors,
+    dateFormat,
+    numberFormat
+  }: CellRendererProps): React.JSX.Element => {
     if (value === null) {
       return <span className="text-secondary text-xs italic">NULL</span>
     }
@@ -1000,3 +1009,5 @@ const CellRenderer = memo(
     return <span className="text-primary truncate block">{String(value)}</span>
   }
 )
+
+CellRenderer.displayName = 'CellRenderer'

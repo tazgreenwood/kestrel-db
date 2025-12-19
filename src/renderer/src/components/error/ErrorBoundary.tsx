@@ -29,7 +29,7 @@ export class ErrorBoundary extends Component<Props, State> {
     }
   }
 
-  static getDerivedStateFromError(_error: Error): Partial<State> {
+  static getDerivedStateFromError(): Partial<State> {
     // Update state so the next render will show the fallback UI
     return { hasError: true }
   }
@@ -185,12 +185,12 @@ ${errorInfo?.componentStack || 'No component stack available'}
                 <p className="text-xs text-tertiary text-center">
                   If this problem persists, please report it at{' '}
                   <a
-                    href="https://github.com/yourusername/kestrel-db/issues"
+                    href="https://github.com/tazgreenwood/kestrel-db/issues"
                     className="text-accent hover:underline"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    github.com/yourusername/kestrel-db
+                    github.com/tazgreenwood/kestrel-db
                   </a>
                 </p>
               </div>

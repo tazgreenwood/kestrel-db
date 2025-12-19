@@ -1,3 +1,4 @@
+import React from 'react'
 import { Key, ListTree, Hash, Calendar, Check, X, Sparkles, Table } from 'lucide-react'
 import type { TableStructure as TableStructureType } from '../../../../preload/index'
 import { useAppStore } from '../../store/useAppStore'
@@ -7,7 +8,7 @@ interface TableStructureProps {
   tableName: string
 }
 
-export function TableStructure({ structure, tableName }: TableStructureProps) {
+export function TableStructure({ structure, tableName }: TableStructureProps): React.JSX.Element {
   const { columns, indexes } = structure
   const viewMode = useAppStore((state) => state.viewMode)
   const setViewMode = useAppStore((state) => state.setViewMode)

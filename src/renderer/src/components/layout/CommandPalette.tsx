@@ -1,9 +1,8 @@
-import { JSX, useEffect, useRef, useState, useMemo } from 'react'
+import React, { useEffect, useRef, useState, useMemo } from 'react'
 import {
   Search,
   Database,
   Table,
-  Terminal,
   CornerDownLeft,
   X,
   Filter,
@@ -29,14 +28,24 @@ import { useConnectionsStore, type ConnectionColor } from '../../store/useConnec
 import { parseComplexQuery } from '../../utils/queryParser'
 import { getTableFilterHistory, saveFilterToHistory } from '../../utils/filterHistory'
 import { ExportProgressModal } from '../modals/ExportProgressModal'
+import kestrelLogo from '@renderer/assets/kestrel-logo.svg'
 
 interface QuickAction {
   id: string
   name: string
   description: string
-  icon: JSX.Element
+  icon: React.JSX.Element
   requiresTable: boolean
   requiresData?: boolean
+}
+
+interface ConnectionItem {
+  id: string
+  name: string
+  host: string
+  user: string
+  port: number
+  color: ConnectionColor
 }
 
 const QUICK_ACTIONS: QuickAction[] = [
@@ -142,7 +151,7 @@ function formatSize(bytes: number): string {
 }
 
 // Highlight matching text in search results
-function highlightMatch(text: string, search: string): JSX.Element {
+function highlightMatch(text: string, search: string): React.JSX.Element {
   if (!search) return <>{text}</>
 
   const index = text.toLowerCase().indexOf(search.toLowerCase())
@@ -163,7 +172,7 @@ export function CommandPalette({
   isOpen,
   onClose,
   onShowToast
-}: CommandPaletteProps): JSX.Element | null {
+}: CommandPaletteProps): React.JSX.Element | null {
   const availableDatabases = useAppStore((state) => state.availableDatabases)
   const tables = useAppStore((state) => state.tables)
   const currentDb = useAppStore((state) => state.currentDb)
@@ -491,7 +500,7 @@ export function CommandPalette({
         downloadFile(csvContent, filename, 'text/csv')
       } else {
         // Convert to JSON with progress
-        const jsonRows: any[] = []
+        const jsonRows: Record<string, unknown>[] = []
 
         // Process in chunks
         for (let i = 0; i < totalRows; i += chunkSize) {
@@ -561,7 +570,7 @@ export function CommandPalette({
         break
 
       case 'connections':
-        handleConnectionSwitch((item as any).id)
+        handleConnectionSwitch((item as ConnectionItem).id)
         break
     }
   }
@@ -968,7 +977,7 @@ export function CommandPalette({
                     )}
                     {mode === 'connections' && (
                       <div
-                        className={`w-2 h-2 rounded-full mr-3 ${COLOR_MAP[(item as any).color || 'gray']}`}
+                        className={`w-2 h-2 rounded-full mr-3 ${COLOR_MAP[(item as ConnectionItem).color || 'gray']}`}
                       />
                     )}
 
@@ -988,7 +997,8 @@ export function CommandPalette({
                           {highlightMatch(item.name, search.replace('@', '').trim())}
                         </div>
                         <div className="text-xs text-tertiary">
-                          {(item as any).user}@{(item as any).host}:{(item as any).port}
+                          {(item as ConnectionItem).user}@{(item as ConnectionItem).host}:
+                          {(item as ConnectionItem).port}
                         </div>
                       </div>
                     ) : (
@@ -1010,13 +1020,15 @@ export function CommandPalette({
                     )}
                     {mode === 'connections' && (
                       <span className="ml-auto text-xs">
-                        {(connectionName === item.name || serverName === (item as any).host) && (
+                        {(connectionName === item.name ||
+                          serverName === (item as ConnectionItem).host) && (
                           <span className="text-accent">Active</span>
                         )}
                         {isSelected &&
-                          !(connectionName === item.name || serverName === (item as any).host) && (
-                            <CornerDownLeft className="w-3 h-3 text-tertiary" />
-                          )}
+                          !(
+                            connectionName === item.name ||
+                            serverName === (item as ConnectionItem).host
+                          ) && <CornerDownLeft className="w-3 h-3 text-tertiary" />}
                       </span>
                     )}
                     {mode === 'tables' && (
@@ -1138,8 +1150,8 @@ export function CommandPalette({
               )}
             </div>
             <div className="flex items-center gap-1">
-              <Terminal className="w-3 h-3" />
-              <span>Velocity</span>
+              <img src={kestrelLogo} alt="Kestrel" className="w-4 h-4" />
+              <span>Kestrel</span>
             </div>
           </div>
         </div>

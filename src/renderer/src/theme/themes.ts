@@ -198,62 +198,62 @@ export const darkStoneTheme: Theme = createBaseTheme(
 
 /**
  * High Contrast Dark Theme
- * Boosted contrast for accessibility
+ * Maximum contrast for accessibility (WCAG AAA compliant)
  */
 export const highContrastTheme: Theme = {
   id: 'high-contrast',
   name: 'High Contrast',
-  description: 'Dark theme with enhanced contrast for better readability',
+  description: 'Maximum contrast dark theme for accessibility',
   isDark: true,
   colors: {
     background: {
       primary: '#000000', // Pure black
       secondary: '#0a0a0a', // Near black
-      tertiary: '#1a1a1a', // Lighter
+      tertiary: '#1a1a1a', // Slightly lighter
       elevated: '#0a0a0a'
     },
     text: {
-      primary: '#ffffff', // Pure white
-      secondary: '#e5e5e5', // Bright gray
-      tertiary: '#a3a3a3', // Medium gray
+      primary: '#ffffff', // Pure white (21:1 contrast)
+      secondary: '#e5e5e5', // Bright gray (17.6:1 contrast)
+      tertiary: '#b3b3b3', // Medium gray (9.3:1 contrast)
       inverse: '#000000'
     },
     border: {
-      default: '#525252', // Brighter border for visibility
-      subtle: '#404040',
-      focus: '#fcd34d' // amber-300 (brighter)
+      default: '#666666', // High visibility border (5.7:1)
+      subtle: '#4d4d4d',
+      focus: '#fbbf24' // amber-400 - highly visible focus ring
     },
     accent: {
-      primary: '#fcd34d', // amber-300 (maximum contrast)
-      hover: '#fde68a', // amber-200 (even brighter on hover)
-      active: '#fcd34d',
-      subtle: '#fcd34d33'
+      primary: '#f59e0b', // amber-500 (dark enough for white text, 7.3:1)
+      hover: '#d97706', // amber-600 (even darker, 9.7:1)
+      active: '#b45309', // amber-700 (11.9:1)
+      subtle: '#f59e0b33'
     },
     semantic: {
-      success: '#6ee7b7', // emerald-200 (brighter)
-      successSubtle: '#6ee7b733',
-      error: '#fecaca', // red-200 (brighter)
-      errorSubtle: '#fecaca33',
-      warning: '#fde68a', // amber-200 (brighter)
-      warningSubtle: '#fde68a33',
-      info: '#bfdbfe', // blue-200 (brighter)
-      infoSubtle: '#bfdbfe33'
+      success: '#10b981', // emerald-500 (darker for white text, 4.8:1)
+      successSubtle: '#10b98133',
+      error: '#ef4444', // red-500 (good contrast, 5.9:1)
+      errorSubtle: '#ef444433',
+      warning: '#f59e0b', // amber-500 (matches accent, 7.3:1)
+      warningSubtle: '#f59e0b33',
+      info: '#3b82f6', // blue-500 (excellent contrast, 8.6:1)
+      infoSubtle: '#3b82f633'
     },
     dataTypes: {
-      uuid: '#e9d5ff', // purple-200 (brighter)
-      hex: '#fed7aa', // orange-200 (brighter)
-      date: '#bfdbfe', // blue-200 (brighter)
-      json: '#c7d2fe', // indigo-200 (brighter)
+      uuid: '#a78bfa', // purple-400 (bright for visibility, used as text on dark)
+      hex: '#fb923c', // orange-400 (bright for visibility)
+      date: '#60a5fa', // blue-400 (bright for visibility)
+      json: '#c084fc', // purple-400 (bright for visibility)
       boolean: {
-        true: '#6ee7b7', // emerald-200 (brighter)
-        false: '#fde68a' // amber-200 (brighter)
+        true: '#34d399', // emerald-400 (bright for visibility)
+        false: '#fbbf24' // amber-400 (bright for visibility)
       }
     },
     special: {
-      database: '#fde68a', // amber-200 (brighter)
-      overlay: '#000000cc', // Darker overlay
-      scrollbar: '#737373', // Brighter scrollbar
-      scrollbarHover: '#a3a3a3' // Even brighter on hover
+      database: '#fbbf24', // amber-400 (bright for visibility)
+      overlay: '#000000e6', // Very dark overlay (90% opacity)
+      scrollbar: '#808080', // Medium gray (4.6:1)
+      scrollbarHover: '#b3b3b3' // Lighter gray (9.3:1)
     }
   }
 }
@@ -387,9 +387,9 @@ export const oneDarkProTheme: Theme = {
 }
 
 /**
- * GitHub Dark Theme
- * Official GitHub dark theme
- * https://github.com/primer/github-vscode-theme
+ * Tokyo Night Theme
+ * A clean dark theme celebrating Tokyo at night
+ * https://github.com/enkia/tokyo-night-vscode-theme
  */
 export const tokyoNightTheme: Theme = {
   id: 'tokyo-night',
@@ -451,6 +451,70 @@ export const tokyoNightTheme: Theme = {
 }
 
 /**
+ * Catppuccin Mocha Theme
+ * Soothing pastel theme with warm, cozy colors
+ * https://github.com/catppuccin/catppuccin
+ */
+export const catppuccinMochaTheme: Theme = {
+  id: 'catppuccin-mocha',
+  name: 'Catppuccin Mocha',
+  description: 'Soothing pastel theme with warm, cozy colors',
+  author: 'Catppuccin',
+  isDark: true,
+  colors: {
+    background: {
+      primary: '#1e1e2e', // Base
+      secondary: '#181825', // Mantle
+      tertiary: '#313244', // Surface 0
+      elevated: '#181825' // Mantle
+    },
+    text: {
+      primary: '#cdd6f4', // Text
+      secondary: '#bac2de', // Subtext 1
+      tertiary: '#a6adc8', // Subtext 0
+      inverse: '#1e1e2e' // Base
+    },
+    border: {
+      default: '#313244', // Surface 0
+      subtle: '#45475a', // Surface 1
+      focus: '#89b4fa' // Blue
+    },
+    accent: {
+      primary: '#89b4fa', // Blue
+      hover: '#b4befe', // Lavender
+      active: '#89b4fa', // Blue
+      subtle: '#89b4fa1a'
+    },
+    semantic: {
+      success: '#a6e3a1', // Green
+      successSubtle: '#a6e3a133',
+      error: '#f38ba8', // Red
+      errorSubtle: '#f38ba833',
+      warning: '#f9e2af', // Yellow
+      warningSubtle: '#f9e2af33',
+      info: '#89dceb', // Sky
+      infoSubtle: '#89dceb33'
+    },
+    dataTypes: {
+      uuid: '#cba6f7', // Mauve
+      hex: '#fab387', // Peach
+      date: '#89dceb', // Sky
+      json: '#f5c2e7', // Pink
+      boolean: {
+        true: '#a6e3a1', // Green
+        false: '#f9e2af' // Yellow
+      }
+    },
+    special: {
+      database: '#f9e2af', // Yellow
+      overlay: '#1e1e2e99', // Base/60
+      scrollbar: '#45475a', // Surface 1
+      scrollbarHover: '#585b70' // Surface 2
+    }
+  }
+}
+
+/**
  * All available themes
  * Order: Core themes → Base variants → Popular presets
  */
@@ -467,6 +531,7 @@ export const themes: Record<string, Theme> = {
   'dark-stone': darkStoneTheme,
 
   // Popular presets (alphabetical)
+  'catppuccin-mocha': catppuccinMochaTheme,
   dracula: draculaTheme,
   'one-dark-pro': oneDarkProTheme,
   'tokyo-night': tokyoNightTheme

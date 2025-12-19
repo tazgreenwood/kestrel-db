@@ -4,6 +4,7 @@
  * Multi-tab settings interface for theme, appearance, and preferences
  */
 
+import React, { useState, useEffect, useRef } from 'react'
 import {
   X,
   Palette,
@@ -23,7 +24,6 @@ import {
   Keyboard,
   BookOpen
 } from 'lucide-react'
-import { useState, useEffect, useRef } from 'react'
 import { useSettingsStore } from '../../store/useSettingsStore'
 import type { ImportValidationResult } from '../../store/useSettingsStore'
 import type { Theme } from '../../theme/types'
@@ -40,14 +40,14 @@ interface SettingsModalProps {
 
 type TabId = 'appearance' | 'data' | 'shortcuts' | 'query-syntax' | 'about'
 
-export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
+export function SettingsModal({ isOpen, onClose }: SettingsModalProps): React.JSX.Element | null {
   const [activeTab, setActiveTab] = useState<TabId>('appearance')
 
   // ESC key to close
   useEffect(() => {
     if (!isOpen) return
 
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === 'Escape') {
         onClose()
       }
@@ -137,11 +137,11 @@ function TabButton({
   active,
   onClick
 }: {
-  icon: any
+  icon: React.ElementType
   label: string
   active: boolean
   onClick: () => void
-}) {
+}): React.JSX.Element {
   return (
     <button
       onClick={onClick}
@@ -158,7 +158,7 @@ function TabButton({
 }
 
 // Appearance Tab
-function AppearanceTab() {
+function AppearanceTab(): React.JSX.Element {
   const {
     activeTheme,
     setTheme,
@@ -246,29 +246,29 @@ function AppearanceTab() {
     }
   }, [isDarkVariant])
 
-  const handleBaseColorChange = (colorId: string) => {
+  const handleBaseColorChange = (colorId: string): void => {
     const themeId = colorId === 'zinc' ? 'dark' : `dark-${colorId}`
     setTheme(themeId)
   }
 
-  const handleSaveCustomTheme = (theme: Theme) => {
+  const handleSaveCustomTheme = (theme: Theme): void => {
     addCustomTheme(theme)
     setIsThemeBuilderOpen(false)
     setEditingTheme(undefined)
   }
 
-  const handleEditTheme = (theme: Theme) => {
+  const handleEditTheme = (theme: Theme): void => {
     setEditingTheme(theme)
     setIsThemeBuilderOpen(true)
   }
 
-  const handleDeleteTheme = (themeId: string) => {
+  const handleDeleteTheme = (themeId: string): void => {
     if (confirm('Delete this custom theme? This cannot be undone.')) {
       removeCustomTheme(themeId)
     }
   }
 
-  const handleCopyThemeJSON = (themeId: string) => {
+  const handleCopyThemeJSON = (themeId: string): void => {
     try {
       const exported = exportTheme(themeId)
       if (!exported) {
@@ -285,7 +285,7 @@ function AppearanceTab() {
     }
   }
 
-  const handleImportThemeJSON = (jsonString: string) => {
+  const handleImportThemeJSON = (jsonString: string): void => {
     try {
       const validation = importTheme(jsonString)
       if (validation.isValid && validation.theme) {
@@ -300,12 +300,12 @@ function AppearanceTab() {
     }
   }
 
-  const isCustomTheme = (themeId: string) => {
+  const isCustomTheme = (themeId: string): boolean => {
     return customThemes.some((t) => t.id === themeId)
   }
 
   // Check if font family is one of our presets
-  const isPresetFont = (font: string) => {
+  const isPresetFont = (font: string): boolean => {
     const presets = [
       'ui-monospace',
       "'JetBrains Mono', ui-monospace, monospace",
@@ -371,7 +371,7 @@ function AppearanceTab() {
                   className="w-full bg-tertiary border border-default rounded px-3 py-2 text-xs text-primary font-mono focus:outline-none focus:ring-2 focus:ring-accent"
                 />
                 <p className="text-xs text-tertiary mt-1">
-                  Example: 'Fira Code', 'Source Code Pro', monospace
+                  {"Example: 'Fira Code', 'Source Code Pro', monospace"}
                 </p>
               </div>
             )}
@@ -641,7 +641,7 @@ function AppearanceTab() {
 }
 
 // Data & Performance Tab
-function DataPerformanceTab() {
+function DataPerformanceTab(): React.JSX.Element {
   const {
     defaultChunkSize,
     setDefaultChunkSize,
@@ -744,7 +744,7 @@ function DataPerformanceTab() {
             <label className="text-xs text-secondary mb-1 block">Date Format</label>
             <select
               value={dateFormat}
-              onChange={(e) => setDateFormat(e.target.value as any)}
+              onChange={(e) => setDateFormat(e.target.value as 'iso' | 'local' | 'relative')}
               className="w-full bg-secondary border border-default rounded px-3 py-2 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent"
             >
               <option value="iso">ISO 8601 (2024-01-15T10:30:00Z)</option>
@@ -757,7 +757,7 @@ function DataPerformanceTab() {
             <label className="text-xs text-secondary mb-1 block">Number Format</label>
             <select
               value={numberFormat}
-              onChange={(e) => setNumberFormat(e.target.value as any)}
+              onChange={(e) => setNumberFormat(e.target.value as 'raw' | 'formatted')}
               className="w-full bg-secondary border border-default rounded px-3 py-2 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent"
             >
               <option value="raw">Raw (1234567.89)</option>
@@ -771,7 +771,7 @@ function DataPerformanceTab() {
 }
 
 // Shortcuts Tab
-function ShortcutsTab() {
+function ShortcutsTab(): React.JSX.Element {
   const modKey = getModifierKey()
 
   return (
@@ -970,7 +970,7 @@ function ShortcutsTab() {
 }
 
 // Query Syntax Tab
-function QuerySyntaxTab() {
+function QuerySyntaxTab(): React.JSX.Element {
   return (
     <div className="space-y-6">
       <div>
@@ -1066,13 +1066,13 @@ function QuerySyntaxTab() {
             <code className="px-2 py-1 bg-tertiary border border-default rounded text-xs font-mono text-accent min-w-[100px]">
               @today
             </code>
-            <span className="text-sm text-secondary">Today's date</span>
+            <span className="text-sm text-secondary">{"Today's date"}</span>
           </div>
           <div className="flex items-start gap-3 py-2">
             <code className="px-2 py-1 bg-tertiary border border-default rounded text-xs font-mono text-accent min-w-[100px]">
               @yesterday
             </code>
-            <span className="text-sm text-secondary">Yesterday's date</span>
+            <span className="text-sm text-secondary">{"Yesterday's date"}</span>
           </div>
           <div className="flex items-start gap-3 py-2">
             <code className="px-2 py-1 bg-tertiary border border-default rounded text-xs font-mono text-accent min-w-[100px]">
@@ -1161,7 +1161,7 @@ function QuerySyntaxTab() {
 }
 
 // About Tab
-function AboutTab({ onClose }: { onClose: () => void }) {
+function AboutTab({ onClose }: { onClose: () => void }): React.JSX.Element {
   const resetSettings = useSettingsStore((state) => state.resetSettings)
   const exportSettings = useSettingsStore((state) => state.exportSettings)
   const validateImportedSettings = useSettingsStore((state) => state.validateImportedSettings)
@@ -1176,13 +1176,15 @@ function AboutTab({ onClose }: { onClose: () => void }) {
   const [updateStatus, setUpdateStatus] = useState<
     'idle' | 'checking' | 'available' | 'not-available' | 'downloading' | 'downloaded' | 'error'
   >('idle')
-  const [updateInfo, setUpdateInfo] = useState<any>(null)
+  const [updateInfo, setUpdateInfo] = useState<{ version: string; releaseNotes?: string } | null>(
+    null
+  )
   const [downloadProgress, setDownloadProgress] = useState<number>(0)
   const [errorMessage, setErrorMessage] = useState<string>('')
 
   // Get current version on mount
   useEffect(() => {
-    const loadVersion = async () => {
+    const loadVersion = async (): Promise<void> => {
       const result = await window.api.update.getVersion()
       if (result.success && result.data) {
         setCurrentVersion(result.data)
@@ -1191,31 +1193,31 @@ function AboutTab({ onClose }: { onClose: () => void }) {
     loadVersion()
 
     // Set up update event listeners
-    const unsubChecking = window.api.update.onChecking(() => {
+    const unsubChecking = window.api.update.onChecking((): void => {
       setUpdateStatus('checking')
       setErrorMessage('')
     })
 
-    const unsubAvailable = window.api.update.onAvailable((info) => {
+    const unsubAvailable = window.api.update.onAvailable((info): void => {
       setUpdateStatus('available')
       setUpdateInfo(info)
     })
 
-    const unsubNotAvailable = window.api.update.onNotAvailable(() => {
+    const unsubNotAvailable = window.api.update.onNotAvailable((): void => {
       setUpdateStatus('not-available')
     })
 
-    const unsubError = window.api.update.onError((error) => {
+    const unsubError = window.api.update.onError((error): void => {
       setUpdateStatus('error')
       setErrorMessage(error)
     })
 
-    const unsubProgress = window.api.update.onDownloadProgress((progress) => {
+    const unsubProgress = window.api.update.onDownloadProgress((progress): void => {
       setUpdateStatus('downloading')
       setDownloadProgress(progress.percent || 0)
     })
 
-    const unsubDownloaded = window.api.update.onDownloaded(() => {
+    const unsubDownloaded = window.api.update.onDownloaded((): void => {
       setUpdateStatus('downloaded')
       setDownloadProgress(100)
     })
@@ -1231,31 +1233,31 @@ function AboutTab({ onClose }: { onClose: () => void }) {
     }
   }, [])
 
-  const handleCheckForUpdates = async () => {
+  const handleCheckForUpdates = async (): Promise<void> => {
     setUpdateStatus('checking')
     setErrorMessage('')
     await window.api.update.checkForUpdates()
   }
 
-  const handleDownloadUpdate = async () => {
+  const handleDownloadUpdate = async (): Promise<void> => {
     setUpdateStatus('downloading')
     setDownloadProgress(0)
     await window.api.update.downloadUpdate()
   }
 
-  const handleInstallUpdate = async () => {
+  const handleInstallUpdate = async (): Promise<void> => {
     await window.api.update.installUpdate()
     // App will quit and restart
   }
 
-  const handleReset = () => {
+  const handleReset = (): void => {
     if (confirm('Reset all settings to defaults? This cannot be undone.')) {
       resetSettings()
       onClose()
     }
   }
 
-  const handleExport = async () => {
+  const handleExport = async (): Promise<void> => {
     try {
       const exported = exportSettings()
       const json = JSON.stringify(exported, null, 2)
@@ -1272,7 +1274,7 @@ function AboutTab({ onClose }: { onClose: () => void }) {
     }
   }
 
-  const handleImport = async () => {
+  const handleImport = async (): Promise<void> => {
     try {
       // Show open dialog
       const filePath = await window.api.dialog.openSettings()
@@ -1289,7 +1291,7 @@ function AboutTab({ onClose }: { onClose: () => void }) {
     }
   }
 
-  const handleConfirmImport = () => {
+  const handleConfirmImport = (): void => {
     if (validationResult && validationResult.isValid && validationResult.settings) {
       applyImportedSettings(validationResult.settings)
       setIsImportPreviewOpen(false)
@@ -1298,7 +1300,7 @@ function AboutTab({ onClose }: { onClose: () => void }) {
     }
   }
 
-  const handleCopyToClipboard = () => {
+  const handleCopyToClipboard = (): void => {
     try {
       const exported = exportSettings()
       const json = JSON.stringify(exported, null, 2)
@@ -1333,7 +1335,7 @@ function AboutTab({ onClose }: { onClose: () => void }) {
             {updateStatus === 'idle' && (
               <div className="flex items-center gap-2 text-sm text-secondary">
                 <Info className="w-4 h-4" />
-                Click "Check for Updates" to see if a new version is available
+                {'Click "Check for Updates" to see if a new version is available'}
               </div>
             )}
 
@@ -1361,7 +1363,7 @@ function AboutTab({ onClose }: { onClose: () => void }) {
             {updateStatus === 'not-available' && (
               <div className="flex items-center gap-2 text-sm text-success">
                 <CheckCircle className="w-4 h-4" />
-                You're running the latest version!
+                {"You're running the latest version!"}
               </div>
             )}
 
@@ -1437,7 +1439,7 @@ function AboutTab({ onClose }: { onClose: () => void }) {
             <p>Built with Electron, React, and TypeScript</p>
             <p>UI powered by Tailwind CSS</p>
             <p>Icons by Lucide</p>
-            <p>Themes: Dracula, One Dark Pro, Tokyo Night</p>
+            <p>Themes: Catppuccin, Dracula, One Dark Pro, Tokyo Night</p>
           </div>
         </div>
 
@@ -1449,8 +1451,9 @@ function AboutTab({ onClose }: { onClose: () => void }) {
               <div className="space-y-2">
                 <h3 className="text-sm font-semibold text-primary">Important Notice</h3>
                 <p className="text-xs text-secondary leading-relaxed">
-                  Kestrel DB is free, open source software provided "as is" without warranty of any
-                  kind. While we strive for reliability:
+                  {
+                    'Kestrel DB is free, open source software provided "as is" without warranty of any kind. While we strive for reliability:'
+                  }
                 </p>
                 <ul className="text-xs text-secondary space-y-1 ml-4 list-disc">
                   <li>Always backup your data before performing operations</li>

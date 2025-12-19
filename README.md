@@ -4,6 +4,14 @@
   <strong>Precision Data Exploration for MySQL</strong>
 </p>
 
+<p align="center">
+  <img src="resources/landing-page-with-connections.png" alt="Kestrel DB Connection Page" width="800">
+</p>
+
+<p align="center">
+  <img src="resources/kestrel-short-demo.gif" alt="Kestrel DB Demo - Keyboard-First Workflow" width="800">
+</p>
+
 A modern, keyboard-first MySQL client built with Electron, React, and TypeScript. Navigate your databases with the speed and precision of a kestrel.
 
 ## ✨ Key Features
@@ -22,7 +30,23 @@ A modern, keyboard-first MySQL client built with Electron, React, and TypeScript
 
 ## 📸 Screenshots
 
-> Screenshots coming soon
+### Data Grid with Filtering
+
+<img src="resources/data-grid-with-filter.png" alt="Data Grid with Smart Filtering" width="800">
+
+_Advanced filtering with natural query syntax - type `?id>1000` to filter instantly_
+
+### Command Palette
+
+<img src="resources/cmd-palette-search.png" alt="Command Palette" width="800">
+
+_Keyboard-first navigation - press `Cmd+K` to access all functionality_
+
+### Filter Syntax
+
+<img src="resources/cmd-palette-filter.png" alt="Command Palette Filter" width="800">
+
+_Powerful filter syntax with autocomplete and real-time validation_
 
 ## 🚀 Installation
 
@@ -110,7 +134,7 @@ Kestrel DB is designed for keyboard-first workflows. Master these shortcuts to w
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/kestrel-db.git
+git clone https://github.com/tazgreenwood/kestrel-db.git
 cd kestrel-db
 
 # Install dependencies
@@ -220,6 +244,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built with [electron-vite](https://github.com/alex8088/electron-vite)
 - Icons from [Lucide](https://lucide.dev/)
 - Inspired by modern development tools that prioritize speed and keyboard accessibility
+- Color schemes: [Catppuccin](https://catppuccin.com), [Dracula](https://draculatheme.com), [One Dark Pro](https://github.com/Binaryify/OneDark-Pro), [Tokyo Night](https://github.com/enkia/tokyo-night-vscode-theme)
+
+See [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for complete third-party attributions and licenses.
 
 ## ⚖️ Legal
 

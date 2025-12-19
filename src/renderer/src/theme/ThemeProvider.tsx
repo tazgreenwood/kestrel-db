@@ -4,7 +4,7 @@
  * Applies theme settings to the document and watches for changes
  */
 
-import { useEffect, type ReactNode } from 'react'
+import React, { useEffect, type ReactNode } from 'react'
 import { useSettingsStore } from '../store/useSettingsStore'
 import { applyThemeSettings } from './cssVariables'
 
@@ -12,7 +12,7 @@ interface ThemeProviderProps {
   children: ReactNode
 }
 
-export function ThemeProvider({ children }: ThemeProviderProps) {
+export function ThemeProvider({ children }: ThemeProviderProps): React.JSX.Element {
   const {
     activeTheme,
     customThemes,

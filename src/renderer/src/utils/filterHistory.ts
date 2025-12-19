@@ -2,7 +2,7 @@
  * Manage filter history in localStorage
  */
 
-const STORAGE_KEY = 'velocity_filter_history'
+const STORAGE_KEY = 'kestrel_filter_history'
 const MAX_HISTORY_PER_TABLE = 10
 
 interface FilterHistory {

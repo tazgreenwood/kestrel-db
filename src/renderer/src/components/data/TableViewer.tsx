@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { DataGrid } from './DataGrid'
 import { TableStructure } from './TableStructure'
 import { useAppStore } from '../../store/useAppStore'
@@ -6,14 +6,20 @@ import type { TableStructure as TableStructureType } from '../../../../preload/i
 import { ListTree, Key } from 'lucide-react'
 
 interface TableViewerProps {
-  data: any[]
+  data: Record<string, unknown>[]
   tableName: string
   isLoading?: boolean
   totalRows?: number // Override totalRows from store (for custom queries)
   hasMore?: boolean // Override hasMore from store (for custom queries)
 }
 
-export function TableViewer({ data, tableName, isLoading, totalRows, hasMore }: TableViewerProps) {
+export function TableViewer({
+  data,
+  tableName,
+  isLoading,
+  totalRows,
+  hasMore
+}: TableViewerProps): React.JSX.Element {
   const viewMode = useAppStore((state) => state.viewMode)
   const [structure, setStructure] = useState<TableStructureType | null>(null)
   const [isLoadingStructure, setIsLoadingStructure] = useState(false)

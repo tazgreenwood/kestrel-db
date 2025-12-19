@@ -5,7 +5,7 @@
  */
 
 import { X, Palette, Save, RotateCcw } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSettingsStore } from '../../store/useSettingsStore'
 import { getAllThemes } from '../../theme/themes'
 import type { Theme, ThemeColors } from '../../theme/types'
@@ -22,7 +22,7 @@ export function ThemeBuilderModal({
   onClose,
   onSave,
   editingTheme
-}: ThemeBuilderModalProps) {
+}: ThemeBuilderModalProps): React.JSX.Element | null {
   const getCurrentTheme = useSettingsStore((state) => state.getCurrentTheme)
   const allThemes = getAllThemes()
 
@@ -62,7 +62,7 @@ export function ThemeBuilderModal({
   }, [baseThemeId, allThemes, editingTheme])
 
   // Reset to current theme
-  const handleReset = () => {
+  const handleReset = (): void => {
     if (editingTheme) {
       // Reset to original editing theme
       setThemeName(editingTheme.name)
@@ -77,14 +77,14 @@ export function ThemeBuilderModal({
   }
 
   // Update a specific color
-  const updateColor = (path: string, value: string) => {
+  const updateColor = (path: string, value: string): void => {
     setColors((prev) => {
       const newColors = { ...prev }
       const keys = path.split('.')
-      let current: any = newColors
+      let current: Record<string, unknown> = newColors as Record<string, unknown>
 
       for (let i = 0; i < keys.length - 1; i++) {
-        current = current[keys[i]]
+        current = current[keys[i]] as Record<string, unknown>
       }
       current[keys[keys.length - 1]] = value
 
@@ -93,7 +93,7 @@ export function ThemeBuilderModal({
   }
 
   // Save custom theme
-  const handleSave = () => {
+  const handleSave = (): void => {
     // Generate unique ID for new themes, or keep existing ID when editing
     const themeId = editingTheme
       ? editingTheme.id
@@ -118,7 +118,7 @@ export function ThemeBuilderModal({
     >
       <div
         className="w-full max-w-6xl h-[90vh] bg-secondary border border-default rounded-xl shadow-2xl overflow-hidden flex flex-col"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e): void => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-default bg-secondary shrink-0">
@@ -145,7 +145,7 @@ export function ThemeBuilderModal({
                 <input
                   type="text"
                   value={themeName}
-                  onChange={(e) => setThemeName(e.target.value)}
+                  onChange={(e): void => setThemeName(e.target.value)}
                   className="w-full bg-tertiary border border-default rounded px-3 py-2 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent"
                   placeholder="My Custom Theme"
                 />
@@ -156,7 +156,7 @@ export function ThemeBuilderModal({
                 <input
                   type="text"
                   value={themeDescription}
-                  onChange={(e) => setThemeDescription(e.target.value)}
+                  onChange={(e): void => setThemeDescription(e.target.value)}
                   className="w-full bg-tertiary border border-default rounded px-3 py-2 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent"
                   placeholder="A beautiful custom theme"
                 />
@@ -166,7 +166,7 @@ export function ThemeBuilderModal({
                 <label className="text-xs text-secondary mb-1 block">Start from Theme</label>
                 <select
                   value={baseThemeId}
-                  onChange={(e) => setBaseThemeId(e.target.value)}
+                  onChange={(e): void => setBaseThemeId(e.target.value)}
                   className="w-full bg-tertiary border border-default rounded px-3 py-2 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent"
                 >
                   {allThemes.map((theme) => (
@@ -444,7 +444,13 @@ export function ThemeBuilderModal({
 }
 
 // Color Section Component
-function ColorSection({ title, children }: { title: string; children: React.ReactNode }) {
+function ColorSection({
+  title,
+  children
+}: {
+  title: string
+  children: React.ReactNode
+}): React.JSX.Element {
   return (
     <div className="border border-default rounded-lg p-4 bg-primary">
       <h4 className="text-sm font-semibold text-primary mb-3">{title}</h4>
@@ -462,7 +468,7 @@ function ColorInput({
   label: string
   value: string
   onChange: (value: string) => void
-}) {
+}): React.JSX.Element {
   return (
     <div>
       <label className="text-xs text-secondary mb-1 block">{label}</label>
@@ -470,13 +476,13 @@ function ColorInput({
         <input
           type="color"
           value={value.length === 9 ? value.slice(0, 7) : value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e): void => onChange(e.target.value)}
           className="w-10 h-10 rounded border border-default cursor-pointer"
         />
         <input
           type="text"
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e): void => onChange(e.target.value)}
           className="flex-1 bg-tertiary border border-default rounded px-2 py-1 text-xs text-primary font-mono focus:outline-none focus:ring-1 focus:ring-accent"
         />
       </div>
@@ -485,7 +491,7 @@ function ColorInput({
 }
 
 // Color Swatch Component
-function ColorSwatch({ label, color }: { label: string; color: string }) {
+function ColorSwatch({ label, color }: { label: string; color: string }): React.JSX.Element {
   return (
     <div className="flex items-center gap-2">
       <div className="w-6 h-6 rounded border border-default" style={{ backgroundColor: color }} />

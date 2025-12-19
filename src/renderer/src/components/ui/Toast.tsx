@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Check, AlertCircle } from 'lucide-react'
 
 interface ToastProps {
@@ -8,7 +8,12 @@ interface ToastProps {
   type?: 'success' | 'error'
 }
 
-export function Toast({ message, onClose, duration = 2000, type = 'success' }: ToastProps) {
+export function Toast({
+  message,
+  onClose,
+  duration = 2000,
+  type = 'success'
+}: ToastProps): React.JSX.Element {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose()
