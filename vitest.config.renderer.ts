@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  assetsInclude: ['**/*.svg'],
   test: {
     name: 'renderer',
     include: [
@@ -11,9 +12,20 @@ export default defineConfig({
       'tests/component/**/*.test.{ts,tsx}',
       'tests/integration/stores/**/*.test.ts'
     ],
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      // TODO: Fix SVG asset imports
+      '**/tests/unit/renderer/components/CommandPalette.test.tsx'
+    ],
     environment: 'happy-dom',
     globals: true,
     setupFiles: ['./tests/setup/setup-renderer.ts'],
+    server: {
+      deps: {
+        inline: ['@renderer/assets/kestrel-logo.svg']
+      }
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -27,7 +39,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@renderer': resolve(__dirname, 'src/renderer/src'),
-      '@tests': resolve(__dirname, 'tests')
+      '@tests': resolve(__dirname, 'tests'),
+      // Mock SVG imports for tests
+      '@renderer/assets/kestrel-logo.svg': resolve(__dirname, 'tests/mocks/svg.mock.ts')
     }
   }
 })

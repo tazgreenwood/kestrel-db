@@ -2,40 +2,28 @@ import { vi } from 'vitest'
 import '@testing-library/jest-dom'
 import { mockWindowApi } from '../mocks/ipc.mock'
 
-// @ts-expect-error - Mocking global window object
-global.window = {
-  ...global.window,
-  api: mockWindowApi
+// Declare global types for test environment
+declare global {
+  var localStorage: Storage
+  interface Window {
+    api: typeof mockWindowApi
+  }
 }
 
-// Mock localStorage
-const localStorageMock = (() => {
-  let store: Record<string, string> = {}
+// Setup window.api and globals at module load time
+// Happy-dom should have created window by now
+if (typeof window !== 'undefined' && window.localStorage) {
+  // Add our mock API to window
+  window.api = mockWindowApi
 
-  return {
-    getItem: (key: string): string | null => {
-      return store[key] || null
-    },
-    setItem: (key: string, value: string): void => {
-      store[key] = value.toString()
-    },
-    removeItem: (key: string): void => {
-      delete store[key]
-    },
-    clear: (): void => {
-      store = {}
-    }
-  }
-})()
+  // Make window and localStorage available globally
+  // @ts-expect-error - Adding to global scope
+  globalThis.window = window
+  // @ts-expect-error - Adding to global scope
+  globalThis.localStorage = window.localStorage
 
-Object.defineProperty(global, 'localStorage', {
-  value: localStorageMock
-})
-
-// Mock matchMedia for responsive tests
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: vi.fn().mockImplementation((query) => ({
+  // Mock matchMedia for responsive tests
+  window.matchMedia = vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -45,7 +33,7 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn()
   }))
-})
+}
 
 // Console setup for cleaner test output
 global.console = {
