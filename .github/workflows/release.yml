@@ -7,6 +7,10 @@ on:
   # Only trigger on version tags, not on regular pushes to main
   # CI workflow will handle testing on pushes to main
 
+# Grant permissions to create releases
+permissions:
+  contents: write
+
 jobs:
   release:
     name: Build & Release
