@@ -28,12 +28,21 @@ mac:
   notarize: false
   # Skip code signing if certificates aren't available
   identity: null
+  # Build for both Intel and Apple Silicon
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+    - target: zip
+      arch:
+        - x64
+        - arm64
 dmg:
   artifactName: ${name}-${version}.${ext}
 linux:
   target:
     - AppImage
-    - snap
     - deb
   maintainer: tazgreenwood <taz@kestreldb.com>
   category: Utility
