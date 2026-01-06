@@ -293,7 +293,9 @@ describe('useSettingsStore', () => {
           }
         }
 
-        const validation = useSettingsStore.getState().validateImportedSettings(JSON.stringify(validSettings))
+        const validation = useSettingsStore
+          .getState()
+          .validateImportedSettings(JSON.stringify(validSettings))
 
         expect(validation.isValid).toBe(true)
         expect(validation.errors).toHaveLength(0)
@@ -314,7 +316,9 @@ describe('useSettingsStore', () => {
           data: {}
         }
 
-        const validation = useSettingsStore.getState().validateImportedSettings(JSON.stringify(invalid))
+        const validation = useSettingsStore
+          .getState()
+          .validateImportedSettings(JSON.stringify(invalid))
 
         expect(validation.isValid).toBe(false)
         expect(validation.errors).toContain('Invalid format: missing "settings" field')
@@ -327,7 +331,9 @@ describe('useSettingsStore', () => {
           }
         }
 
-        const validation = useSettingsStore.getState().validateImportedSettings(JSON.stringify(settings))
+        const validation = useSettingsStore
+          .getState()
+          .validateImportedSettings(JSON.stringify(settings))
 
         expect(validation.warnings).toContain('fontSize out of range (12-16), using default')
         expect(validation.settings?.fontSize).toBeUndefined()
@@ -341,7 +347,9 @@ describe('useSettingsStore', () => {
           }
         }
 
-        const validation = useSettingsStore.getState().validateImportedSettings(JSON.stringify(settings))
+        const validation = useSettingsStore
+          .getState()
+          .validateImportedSettings(JSON.stringify(settings))
 
         expect(validation.warnings.length).toBeGreaterThan(0)
       })
@@ -353,7 +361,9 @@ describe('useSettingsStore', () => {
           }
         }
 
-        const validation = useSettingsStore.getState().validateImportedSettings(JSON.stringify(settings))
+        const validation = useSettingsStore
+          .getState()
+          .validateImportedSettings(JSON.stringify(settings))
 
         expect(validation.isValid).toBe(true)
         expect(validation.settings?.customThemes).toHaveLength(1)
@@ -370,7 +380,9 @@ describe('useSettingsStore', () => {
           }
         }
 
-        const validation = useSettingsStore.getState().validateImportedSettings(JSON.stringify(settings))
+        const validation = useSettingsStore
+          .getState()
+          .validateImportedSettings(JSON.stringify(settings))
 
         expect(validation.warnings.length).toBeGreaterThan(0)
         expect(validation.settings?.customThemes).toHaveLength(1) // Only valid theme

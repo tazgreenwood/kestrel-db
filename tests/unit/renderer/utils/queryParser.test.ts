@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { parseQueryCommand, parseComplexQuery, type ColumnInfo } from '../../../../src/renderer/src/utils/queryParser'
+import {
+  parseQueryCommand,
+  parseComplexQuery,
+  type ColumnInfo
+} from '../../../../src/renderer/src/utils/queryParser'
 
 describe('queryParser.ts', () => {
   const mockColumns: ColumnInfo[] = [

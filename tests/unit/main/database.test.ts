@@ -1,11 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { type RowDataPacket } from 'mysql2/promise'
-import {
-  mockMysql,
-  createMockPool,
-  mockQuerySuccess,
-  mockQueryError
-} from '../../mocks/mysql.mock'
+import { mockMysql, createMockPool, mockQuerySuccess, mockQueryError } from '../../mocks/mysql.mock'
 import {
   mockCredentials,
   mockDatabases,
@@ -138,8 +132,8 @@ describe('database.ts', () => {
 
     it('should successfully select a database', async () => {
       mockPool.query
-        .mockResolvedValueOnce(mockQuerySuccess([]))  // SELECT 1 health check
-        .mockResolvedValueOnce(mockQuerySuccess([]))  // USE database
+        .mockResolvedValueOnce(mockQuerySuccess([])) // SELECT 1 health check
+        .mockResolvedValueOnce(mockQuerySuccess([])) // USE database
 
       const result = await selectDatabase(TEST_WINDOW_ID, 'testdb')
 
@@ -166,7 +160,7 @@ describe('database.ts', () => {
 
     it('should handle non-existent database', async () => {
       mockPool.query
-        .mockResolvedValueOnce(mockQuerySuccess([]))  // SELECT 1
+        .mockResolvedValueOnce(mockQuerySuccess([])) // SELECT 1
         .mockRejectedValueOnce(mockQueryError("Unknown database 'nonexistent'"))
 
       await expect(selectDatabase(TEST_WINDOW_ID, 'nonexistent')).rejects.toThrow(
@@ -189,8 +183,8 @@ describe('database.ts', () => {
 
     it('should return list of tables with metadata', async () => {
       mockPool.query
-        .mockResolvedValueOnce(mockQuerySuccess([]))  // SELECT 1
-        .mockResolvedValueOnce(mockQuerySuccess([]))  // USE database (re-select)
+        .mockResolvedValueOnce(mockQuerySuccess([])) // SELECT 1
+        .mockResolvedValueOnce(mockQuerySuccess([])) // USE database (re-select)
         .mockResolvedValueOnce(mockQuerySuccess(mockTableStatusResults))
 
       const result = await getTables(TEST_WINDOW_ID)
@@ -206,16 +200,14 @@ describe('database.ts', () => {
     it('should throw error if no active pool', async () => {
       await cleanupWindow(TEST_WINDOW_ID)
 
-      await expect(getTables(TEST_WINDOW_ID)).rejects.toThrow(
-        'No active database connection'
-      )
+      await expect(getTables(TEST_WINDOW_ID)).rejects.toThrow('No active database connection')
     })
 
     it('should handle empty database', async () => {
       mockPool.query
-        .mockResolvedValueOnce(mockQuerySuccess([]))  // SELECT 1
-        .mockResolvedValueOnce(mockQuerySuccess([]))  // USE database
-        .mockResolvedValueOnce(mockQuerySuccess([]))  // SHOW TABLE STATUS (empty)
+        .mockResolvedValueOnce(mockQuerySuccess([])) // SELECT 1
+        .mockResolvedValueOnce(mockQuerySuccess([])) // USE database
+        .mockResolvedValueOnce(mockQuerySuccess([])) // SHOW TABLE STATUS (empty)
 
       const result = await getTables(TEST_WINDOW_ID)
 
@@ -245,8 +237,8 @@ describe('database.ts', () => {
 
     it('should return column information for a table', async () => {
       mockPool.query
-        .mockResolvedValueOnce(mockQuerySuccess([]))  // SELECT 1
-        .mockResolvedValueOnce(mockQuerySuccess([]))  // USE database
+        .mockResolvedValueOnce(mockQuerySuccess([])) // SELECT 1
+        .mockResolvedValueOnce(mockQuerySuccess([])) // USE database
         .mockResolvedValueOnce(mockQuerySuccess(mockShowColumnsResults))
 
       const result = await getTableColumns(TEST_WINDOW_ID, 'users')
@@ -332,7 +324,7 @@ describe('database.ts', () => {
       const columnName = 'user_id'
 
       // Expected UUID format: 01234567-89ab-cdef-0123-456789abcdef
-      const expected = '30313233-3435-3637-3839-616263646566'
+      // const expected = '30313233-3435-3637-3839-616263646566'
 
       // This will be tested through integration tests
       expect(buffer.length).toBe(16)

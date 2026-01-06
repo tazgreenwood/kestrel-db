@@ -1,5 +1,5 @@
 import { vi } from 'vitest'
-import type { Pool, RowDataPacket, ResultSetHeader } from 'mysql2/promise'
+import type { RowDataPacket, ResultSetHeader } from 'mysql2/promise'
 
 export interface MockPool {
   query: ReturnType<typeof vi.fn>
@@ -40,10 +40,7 @@ export function mockQuerySuccess<T = RowDataPacket[]>(data: T): [T, unknown] {
 /**
  * Helper to mock ResultSetHeader for INSERT/UPDATE/DELETE
  */
-export function mockResultSetHeader(
-  affectedRows = 1,
-  insertId = 0
-): [ResultSetHeader[], unknown] {
+export function mockResultSetHeader(affectedRows = 1, insertId = 0): [ResultSetHeader[], unknown] {
   return [
     [
       {

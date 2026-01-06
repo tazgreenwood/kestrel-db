@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { useSQLStore, type QueryHistoryItem, type SavedQuery } from '../../../../src/renderer/src/store/useSQLStore'
+import { useSQLStore, type QueryHistoryItem } from '../../../../src/renderer/src/store/useSQLStore'
 import type { QueryExecutionResult } from '../../../../src/preload/index'
 
 describe('useSQLStore', () => {
@@ -311,7 +311,6 @@ describe('useSQLStore', () => {
 
         expect(useSQLStore.getState().currentQuery).toBe('SELECT * FROM orders')
       })
-
     })
 
     describe('clearHistory', () => {
@@ -357,7 +356,9 @@ describe('useSQLStore', () => {
       })
 
       it('should save query with tags', () => {
-        useSQLStore.getState().saveQuery('Get Users', 'SELECT * FROM users', ['production', 'critical'])
+        useSQLStore
+          .getState()
+          .saveQuery('Get Users', 'SELECT * FROM users', ['production', 'critical'])
 
         const savedQueries = useSQLStore.getState().savedQueries
         expect(savedQueries[0].tags).toEqual(['production', 'critical'])
@@ -400,11 +401,9 @@ describe('useSQLStore', () => {
 
         expect(useSQLStore.getState().currentQuery).toBe('SELECT * FROM orders')
       })
-
     })
 
     describe('deleteSavedQuery', () => {
-
       it('should delete last saved query', () => {
         useSQLStore.getState().saveQuery('Query 1', 'SELECT 1')
         const id = useSQLStore.getState().savedQueries[0].id
@@ -469,7 +468,6 @@ describe('useSQLStore', () => {
         expect(query.tags).toEqual(['updated'])
       })
 
-
       it('should not error when updating non-existent query', () => {
         useSQLStore.getState().saveQuery('Query 1', 'SELECT 1')
 
@@ -513,7 +511,8 @@ describe('useSQLStore', () => {
     })
 
     it('should handle queries with special characters', () => {
-      const specialQuery = "SELECT * FROM users WHERE name = 'O\\'Reilly' AND email LIKE '%@test.com'"
+      const specialQuery =
+        "SELECT * FROM users WHERE name = 'O\\'Reilly' AND email LIKE '%@test.com'"
 
       useSQLStore.getState().setCurrentQuery(specialQuery)
 

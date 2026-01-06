@@ -4,10 +4,7 @@ import { useSettingsStore } from '../../../../src/renderer/src/store/useSettings
 import { mockWindowApi, mockIpcSuccess, mockIpcError } from '../../../mocks/ipc.mock'
 
 // Helper to wait for async state updates
-const waitForState = async (
-  checkFn: () => boolean,
-  timeout = 2000
-): Promise<void> => {
+const waitForState = async (checkFn: () => boolean, timeout = 2000): Promise<void> => {
   const startTime = Date.now()
   while (!checkFn()) {
     if (Date.now() - startTime > timeout) {
@@ -65,13 +62,9 @@ describe('useAppStore', () => {
 
   describe('setConnection', () => {
     it('should set connection info and reset state', () => {
-      useAppStore.getState().setConnection(
-        'localhost',
-        'root',
-        ['db1', 'db2', 'db3'],
-        'Local MySQL',
-        'blue'
-      )
+      useAppStore
+        .getState()
+        .setConnection('localhost', 'root', ['db1', 'db2', 'db3'], 'Local MySQL', 'blue')
 
       const state = useAppStore.getState()
       expect(state.serverName).toBe('localhost')
@@ -120,9 +113,7 @@ describe('useAppStore', () => {
       const mockToast = vi.fn()
       useAppStore.getState().setShowToast(mockToast)
 
-      mockWindowApi.db.selectDatabase.mockResolvedValueOnce(
-        mockIpcError('Database not found')
-      )
+      mockWindowApi.db.selectDatabase.mockResolvedValueOnce(mockIpcError('Database not found'))
 
       await useAppStore.getState().selectDatabase('nonexistent')
 
@@ -166,7 +157,9 @@ describe('useAppStore', () => {
 
     it('should increment requestId on each call', async () => {
       mockWindowApi.db.getTableColumns.mockResolvedValue(
-        mockIpcSuccess([{ name: 'id', type: 'int', nullable: false, key: 'PRI', default: null, extra: '' }])
+        mockIpcSuccess([
+          { name: 'id', type: 'int', nullable: false, key: 'PRI', default: null, extra: '' }
+        ])
       )
       mockWindowApi.db.queryTable.mockResolvedValue(
         mockIpcSuccess({ data: [], totalCount: 0, hasMore: false })
@@ -183,7 +176,9 @@ describe('useAppStore', () => {
 
     it('should ignore results from stale requests', async () => {
       mockWindowApi.db.getTableColumns.mockResolvedValue(
-        mockIpcSuccess([{ name: 'id', type: 'int', nullable: false, key: 'PRI', default: null, extra: '' }])
+        mockIpcSuccess([
+          { name: 'id', type: 'int', nullable: false, key: 'PRI', default: null, extra: '' }
+        ])
       )
 
       // First request (slow)
@@ -240,7 +235,9 @@ describe('useAppStore', () => {
 
     it('should use dynamic chunk sizing by default', async () => {
       mockWindowApi.db.getTableColumns.mockResolvedValueOnce(
-        mockIpcSuccess([{ name: 'id', type: 'int', nullable: false, key: 'PRI', default: null, extra: '' }])
+        mockIpcSuccess([
+          { name: 'id', type: 'int', nullable: false, key: 'PRI', default: null, extra: '' }
+        ])
       )
       mockWindowApi.db.queryTable.mockResolvedValueOnce(
         mockIpcSuccess({
@@ -266,7 +263,9 @@ describe('useAppStore', () => {
       })
 
       mockWindowApi.db.getTableColumns.mockResolvedValueOnce(
-        mockIpcSuccess([{ name: 'id', type: 'int', nullable: false, key: 'PRI', default: null, extra: '' }])
+        mockIpcSuccess([
+          { name: 'id', type: 'int', nullable: false, key: 'PRI', default: null, extra: '' }
+        ])
       )
       mockWindowApi.db.queryTable.mockResolvedValueOnce(
         mockIpcSuccess({
@@ -296,14 +295,19 @@ describe('useAppStore', () => {
       })
     })
 
-    const testChunkSizeForRows = async (totalRows: number, expectedChunkSize: number): Promise<void> => {
+    const testChunkSizeForRows = async (
+      totalRows: number,
+      expectedChunkSize: number
+    ): Promise<void> => {
       useAppStore.setState({
         serverName: 'localhost',
         currentDb: 'testdb'
       })
 
       mockWindowApi.db.getTableColumns.mockResolvedValueOnce(
-        mockIpcSuccess([{ name: 'id', type: 'int', nullable: false, key: 'PRI', default: null, extra: '' }])
+        mockIpcSuccess([
+          { name: 'id', type: 'int', nullable: false, key: 'PRI', default: null, extra: '' }
+        ])
       )
       mockWindowApi.db.queryTable.mockResolvedValueOnce(
         mockIpcSuccess({

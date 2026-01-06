@@ -244,7 +244,8 @@ export const mockSavedQueries = [
   {
     id: '1704196800000-def456',
     name: 'Recent Orders',
-    query: "SELECT * FROM orders WHERE created_at > DATE_SUB(NOW(), INTERVAL 7 DAY) ORDER BY created_at DESC",
+    query:
+      'SELECT * FROM orders WHERE created_at > DATE_SUB(NOW(), INTERVAL 7 DAY) ORDER BY created_at DESC',
     createdAt: '2024-01-02T10:00:00Z',
     tags: ['orders', 'recent']
   }

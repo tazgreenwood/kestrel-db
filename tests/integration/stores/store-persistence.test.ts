@@ -303,14 +303,12 @@ describe('Store Persistence Integration', () => {
     })
 
     it('should persist multiple connections', async () => {
-      await useConnectionsStore.getState().saveConnection(
-        { name: 'DB1', host: 'host1', user: 'user1', port: 3306 },
-        ''
-      )
-      await useConnectionsStore.getState().saveConnection(
-        { name: 'DB2', host: 'host2', user: 'user2', port: 3307 },
-        ''
-      )
+      await useConnectionsStore
+        .getState()
+        .saveConnection({ name: 'DB1', host: 'host1', user: 'user1', port: 3306 }, '')
+      await useConnectionsStore
+        .getState()
+        .saveConnection({ name: 'DB2', host: 'host2', user: 'user2', port: 3307 }, '')
 
       const stored = localStorage.getItem('kestrel-connections')
       const parsed = JSON.parse(stored!)
@@ -442,10 +440,9 @@ describe('Store Persistence Integration', () => {
       })
 
       // Add connection
-      await useConnectionsStore.getState().saveConnection(
-        { name: 'Test', host: 'localhost', user: 'root', port: 3306 },
-        ''
-      )
+      await useConnectionsStore
+        .getState()
+        .saveConnection({ name: 'Test', host: 'localhost', user: 'root', port: 3306 }, '')
 
       // Verify all three stores persisted correctly
       const settings = localStorage.getItem('kestrel-settings')

@@ -5,6 +5,18 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/tazgreenwood/kestrel-db/actions/workflows/ci.yml">
+    <img src="https://github.com/tazgreenwood/kestrel-db/actions/workflows/ci.yml/badge.svg" alt="CI Status">
+  </a>
+  <a href="https://github.com/tazgreenwood/kestrel-db/actions/workflows/release.yml">
+    <img src="https://github.com/tazgreenwood/kestrel-db/actions/workflows/release.yml/badge.svg" alt="Release Status">
+  </a>
+  <img src="https://img.shields.io/badge/version-1.0.0--beta.1-blue" alt="Version">
+  <img src="https://img.shields.io/badge/tests-282%20passing-brightgreen" alt="Tests">
+  <img src="https://img.shields.io/badge/status-beta-yellow" alt="Beta Status">
+</p>
+
+<p align="center">
   <img src="resources/landing-page-with-connections.png" alt="Kestrel DB Connection Page" width="800">
 </p>
 

@@ -1,5 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { useConnectionsStore, type SavedConnection } from '../../../../src/renderer/src/store/useConnectionsStore'
+import {
+  useConnectionsStore,
+  type SavedConnection
+} from '../../../../src/renderer/src/store/useConnectionsStore'
 import { mockWindowApi, mockIpcSuccess } from '../../../mocks/ipc.mock'
 
 describe('useConnectionsStore', () => {
@@ -35,7 +38,10 @@ describe('useConnectionsStore', () => {
       })
       expect(connections[0].createdAt).toBeDefined()
       expect(connections[0].lastUsed).toBeDefined()
-      expect(mockWindowApi.keychain.setPassword).toHaveBeenCalledWith('localhost:3306:root', 'password123')
+      expect(mockWindowApi.keychain.setPassword).toHaveBeenCalledWith(
+        'localhost:3306:root',
+        'password123'
+      )
     })
 
     it('should update existing connection and preserve createdAt', async () => {
@@ -146,9 +152,7 @@ describe('useConnectionsStore', () => {
     })
 
     it('should retrieve connection with password from keychain', async () => {
-      mockWindowApi.keychain.getPassword.mockResolvedValueOnce(
-        mockIpcSuccess('password123')
-      )
+      mockWindowApi.keychain.getPassword.mockResolvedValueOnce(mockIpcSuccess('password123'))
 
       const result = await useConnectionsStore.getState().getConnection('localhost:3306:root')
 
@@ -164,9 +168,7 @@ describe('useConnectionsStore', () => {
     })
 
     it('should handle missing password in keychain', async () => {
-      mockWindowApi.keychain.getPassword.mockResolvedValueOnce(
-        mockIpcSuccess(null)
-      )
+      mockWindowApi.keychain.getPassword.mockResolvedValueOnce(mockIpcSuccess(null))
 
       const result = await useConnectionsStore.getState().getConnection('localhost:3306:root')
 
@@ -214,11 +216,9 @@ describe('useConnectionsStore', () => {
     it('should update password in keychain when provided', async () => {
       mockWindowApi.keychain.setPassword.mockResolvedValueOnce(mockIpcSuccess(undefined))
 
-      await useConnectionsStore.getState().updateConnection(
-        'localhost:3306:root',
-        { name: 'Updated' },
-        'newpassword'
-      )
+      await useConnectionsStore
+        .getState()
+        .updateConnection('localhost:3306:root', { name: 'Updated' }, 'newpassword')
 
       expect(mockWindowApi.keychain.setPassword).toHaveBeenCalledWith(
         'localhost:3306:root',
@@ -229,11 +229,9 @@ describe('useConnectionsStore', () => {
     it('should delete password when empty string provided', async () => {
       mockWindowApi.keychain.deletePassword.mockResolvedValueOnce(mockIpcSuccess(true))
 
-      await useConnectionsStore.getState().updateConnection(
-        'localhost:3306:root',
-        { name: 'Updated' },
-        ''
-      )
+      await useConnectionsStore
+        .getState()
+        .updateConnection('localhost:3306:root', { name: 'Updated' }, '')
 
       expect(mockWindowApi.keychain.deletePassword).toHaveBeenCalledWith('localhost:3306:root')
     })

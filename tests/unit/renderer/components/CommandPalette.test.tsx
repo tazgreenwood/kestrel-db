@@ -1,11 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { CommandPalette } from '../../../../src/renderer/src/components/layout/CommandPalette'
 import { useAppStore } from '../../../../src/renderer/src/store/useAppStore'
 import { useSQLStore } from '../../../../src/renderer/src/store/useSQLStore'
 import { useConnectionsStore } from '../../../../src/renderer/src/store/useConnectionsStore'
-import { mockWindowApi } from '../../../mocks/ipc.mock'
 
 /**
  * CommandPalette Component Tests
@@ -64,26 +63,19 @@ describe('CommandPalette', () => {
 
   describe('Rendering', () => {
     it('should render when open', () => {
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       expect(screen.getByPlaceholderText(/Search tables/i)).toBeInTheDocument()
     })
 
     it('should not render when closed', () => {
-      render(
-        <CommandPalette isOpen={false} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={false} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       expect(screen.queryByPlaceholderText(/Search tables/i)).not.toBeInTheDocument()
     })
 
-
     it('should show close button', () => {
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       const closeButton = screen.getByRole('button', { name: '' }) // X button
       expect(closeButton).toBeInTheDocument()
@@ -94,9 +86,7 @@ describe('CommandPalette', () => {
     it('should update search value on typing', async () => {
       const user = userEvent.setup()
 
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       const input = screen.getByPlaceholderText(/Search tables/i)
 
@@ -108,9 +98,7 @@ describe('CommandPalette', () => {
     it('should show initial search value from store', () => {
       useAppStore.setState({ commandPaletteInitialSearch: '?id=123' })
 
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       const input = screen.getByPlaceholderText(/Search tables/i)
       expect(input).toHaveValue('?id=123')
@@ -119,9 +107,7 @@ describe('CommandPalette', () => {
     it('should show database selection placeholder when no database selected', () => {
       useAppStore.setState({ currentDb: null })
 
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       expect(screen.getByPlaceholderText('Select a database...')).toBeInTheDocument()
     })
@@ -129,19 +115,14 @@ describe('CommandPalette', () => {
 
   describe('Table Mode', () => {
     it('should display available tables', () => {
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       expect(screen.getByText('users')).toBeInTheDocument()
       expect(screen.getByText('orders')).toBeInTheDocument()
     })
 
-
     it('should show row count and size for tables', () => {
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       expect(screen.getByText('100 rows')).toBeInTheDocument()
       expect(screen.getByText('50 rows')).toBeInTheDocument()
@@ -152,9 +133,7 @@ describe('CommandPalette', () => {
     it('should show databases when search starts with >', async () => {
       const user = userEvent.setup()
 
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       const input = screen.getByPlaceholderText(/Search tables/i)
       await user.type(input, '>')
@@ -163,7 +142,6 @@ describe('CommandPalette', () => {
       expect(screen.getByText('test_db')).toBeInTheDocument()
       expect(screen.getByText('production_db')).toBeInTheDocument()
     })
-
   })
 
   describe('Filter Mode', () => {
@@ -181,9 +159,7 @@ describe('CommandPalette', () => {
     it('should show filter mode when search starts with ?', async () => {
       const user = userEvent.setup()
 
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       const input = screen.getByPlaceholderText(/Search tables/i)
       await user.type(input, '?')
@@ -191,17 +167,13 @@ describe('CommandPalette', () => {
       // Should show filter-related UI
       expect(input).toHaveValue('?')
     })
-
   })
-
 
   describe('Keyboard Navigation', () => {
     it('should close palette on Escape key', async () => {
       const user = userEvent.setup()
 
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       const input = screen.getByPlaceholderText(/Search tables/i)
       await user.click(input)
@@ -213,9 +185,7 @@ describe('CommandPalette', () => {
     it('should close palette on backdrop click', async () => {
       const user = userEvent.setup()
 
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       // Click the backdrop (absolute positioned div)
       const backdrop = document.querySelector('.absolute.inset-0')
@@ -228,9 +198,7 @@ describe('CommandPalette', () => {
     it('should close palette on X button click', async () => {
       const user = userEvent.setup()
 
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       // Find the close button (the one with X icon)
       const buttons = screen.getAllByRole('button')
@@ -250,9 +218,7 @@ describe('CommandPalette', () => {
         tables: []
       })
 
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       // Should show animated loading skeletons
       const skeletons = document.querySelectorAll('.animate-pulse')
@@ -265,9 +231,7 @@ describe('CommandPalette', () => {
         tables: [{ name: 'users', rows: 100, dataSize: 1024, indexSize: 512 }]
       })
 
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       // Should not show loading state
       const skeletons = document.querySelectorAll('.animate-pulse')
@@ -275,14 +239,11 @@ describe('CommandPalette', () => {
     })
   })
 
-
   describe('Contextual Hints', () => {
     it('should show filter hint when no search and table is selected', () => {
       useAppStore.setState({ activeTable: 'users' })
 
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       expect(screen.getByText('Type ? to filter')).toBeInTheDocument()
     })
@@ -290,17 +251,13 @@ describe('CommandPalette', () => {
     it('should show database switch hint when no search and no table selected', () => {
       useAppStore.setState({ activeTable: null })
 
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       expect(screen.getByText('Type > to switch DB')).toBeInTheDocument()
     })
 
     it('should show footer navigation hints', () => {
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       // Should show keyboard shortcut hints in footer
       expect(screen.getByText('Navigate')).toBeInTheDocument()
@@ -311,9 +268,7 @@ describe('CommandPalette', () => {
 
   describe('Branding', () => {
     it('should show Kestrel branding in footer', () => {
-      render(
-        <CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />
-      )
+      render(<CommandPalette isOpen={true} onClose={mockOnClose} onShowToast={mockOnShowToast} />)
 
       expect(screen.getByText('Kestrel')).toBeInTheDocument()
       expect(screen.getByAltText('Kestrel')).toBeInTheDocument()

@@ -1,7 +1,7 @@
 {
   "name": "kestrel-db",
   "productName": "Kestrel DB",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "description": "Kestrel DB - Precision Data Exploration for MySQL",
   "main": "./out/main/index.js",
   "author": "Taz Greenwood",
