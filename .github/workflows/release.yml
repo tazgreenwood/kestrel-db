@@ -2,9 +2,10 @@ name: Release
 
 on:
   push:
-    branches: [main]
     tags:
       - 'v*'
+  # Only trigger on version tags, not on regular pushes to main
+  # CI workflow will handle testing on pushes to main
 
 jobs:
   release:
@@ -39,35 +40,21 @@ jobs:
           npm run test:renderer
           npm run test:main
 
-      # macOS-specific: Install certificates (if provided)
-      - name: Setup macOS signing (if certificates available)
-        if: matrix.os == 'macos-latest' && env.CSC_LINK != ''
-        run: |
-          echo "Code signing certificates detected"
-          # Certificates will be used automatically by electron-builder
-        env:
-          CSC_LINK: ${{ secrets.CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-
       # Build and publish release
       - name: Build & Release - macOS
         if: matrix.os == 'macos-latest'
         run: npm run publish:mac
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CSC_LINK: ${{ secrets.CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # Code signing is disabled in electron-builder.yml (identity: null)
+          # To enable signing, add CSC_LINK and CSC_KEY_PASSWORD secrets
 
       - name: Build & Release - Windows
         if: matrix.os == 'windows-latest'
         run: npm run publish:win
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CSC_LINK: ${{ secrets.CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          # Code signing is optional - add WIN_CSC_LINK and WIN_CSC_KEY_PASSWORD secrets to enable
 
       - name: Build & Release - Linux
         if: matrix.os == 'ubuntu-latest'
